@@ -1,0 +1,420 @@
+{% style %}
+  .brand-timeline-{{ section.id }} {
+    --gold: {{ section.settings.accent_color | default: '#d4a762' }};
+    --dark: {{ section.settings.text_dark | default: '#222' }};
+    --medium: {{ section.settings.text_medium | default: '#555' }};
+    --light: {{ section.settings.text_light | default: '#777' }};
+    --bg: {{ section.settings.background | default: '#f5f5f5' }};
+    padding: 60px 20px;
+    background-color: #f5f5f5;
+  }
+
+  .brand-timeline-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px;
+    background: white;
+    box-shadow: 0 5px 30px rgba(0,0,0,0.05);
+    border-radius: 8px;
+  }
+  
+  .timeline-header {
+    text-align: center;
+    margin-bottom: 60px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+  }
+  
+  .timeline-header h1 {
+    font-family: var(--font-heading-family);
+    font-size: 2.8rem;
+    color: var(--dark);
+    margin-bottom: 15px;
+    font-weight: 600;
+    letter-spacing: -0.5px;
+  }
+  
+  .timeline-header p {
+    font-size: 1.1rem;
+    max-width: 700px;
+    margin: 0 auto;
+    color: var(--light);
+  }
+  
+  .animated-timeline {
+    position: relative;
+  }
+  
+  .timeline-item {
+    display: flex;
+    margin-bottom: 60px;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+  
+  .timeline-item.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  .timeline-year {
+    width: 100px;
+    flex-shrink: 0;
+    font-family: var(--font-heading-family);
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--dark);
+    padding-top: 5px;
+    transition: all 0.4s ease;
+  }
+  
+  .timeline-content {
+    position: relative;
+    flex-grow: 1;
+    padding-bottom: 40px;
+    border-left: 2px solid rgba(62, 39, 35, 0.1);
+    padding-left: 35px;
+    transition: all 0.4s ease;
+  }
+  
+  .timeline-connector {
+    position: absolute;
+    left: -11px;
+    top: 0;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: white;
+    border: 4px solid #a52a2a;
+    transform: scale(1);
+    transition: all 0.4s ease;
+    z-index: 2;
+  }
+  
+  .timeline-text {
+    font-size: 18px;
+    line-height: 1.7;
+    color: var(--medium);
+    padding-right: 30px;
+    transition: all 0.4s ease;
+  }
+  
+  .timeline-item:hover .timeline-year {
+    color: #a52a2a;
+    transform: translateX(5px);
+  }
+  
+  .timeline-item:hover .timeline-connector {
+    transform: scale(1.15);
+    background: #fff;
+    box-shadow: 0 0 0 6px rgba(212, 167, 98, 0.2);
+  }
+  
+  .timeline-item:hover .timeline-content {
+    border-left-color: #a52a2a;
+  }
+  
+  .timeline-item:hover .timeline-text {
+    color: var(--dark);
+  }
+  
+  .timeline-item:last-child .timeline-content {
+    padding-bottom: 0;
+    border-left-color: transparent;
+  }
+  
+  .seo-meta-content {
+    max-width: 800px;
+    margin: 80px auto 0;
+    padding: 40px;
+    background: #f9f7f3;
+    border-radius: 8px;
+    font-size: 16px;
+    line-height: 1.8;
+  }
+  
+  .seo-meta-content h2 {
+    font-family: var(--font-heading-family);
+    color: var(--dark);
+    margin-bottom: 20px;
+    font-size: 1.8rem;
+  }
+  
+  .seo-meta-content p {
+    margin-bottom: 15px;
+  }
+  
+  .seo-keywords {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 20px;
+  }
+  
+  .seo-keywords span {
+    background: #fff;
+    color: var(--dark);
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 14px;
+  }
+  
+  @media (max-width: 768px) {
+    .brand-timeline-container {
+      padding: 25px;
+    }
+    
+    .timeline-header h1 {
+      font-size: 2.2rem;
+    }
+    
+    .timeline-item {
+      flex-direction: column;
+      margin-bottom: 45px;
+    }
+    
+    .timeline-year {
+      width: 100%;
+      margin-bottom: 15px;
+      font-size: 22px;
+    }
+    
+    .timeline-content {
+      padding-left: 25px;
+      border-left-width: 1px;
+    }
+    
+    .timeline-connector {
+      left: -8px;
+      width: 16px;
+      height: 16px;
+    }
+    
+    .timeline-text {
+      font-size: 16px;
+      padding-right: 0;
+    }
+    
+    .seo-meta-content {
+      margin-top: 50px;
+      padding: 25px;
+    }
+  }
+{% endstyle %}
+
+{%- unless request.design_mode -%}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const timelineItems = document.querySelectorAll('#shopify-section-{{ section.id }} .timeline-item');
+    
+    // Initialize Intersection Observer for scroll animations
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, index) => {
+        if (entry.isIntersecting) {
+          // Add staggered delay based on index
+          setTimeout(() => {
+            entry.target.classList.add('visible');
+          }, 150 * index);
+        }
+      });
+    }, { threshold: 0.1 });
+    
+    // Observe each timeline item
+    timelineItems.forEach(item => {
+      observer.observe(item);
+    });
+    
+    // Add hover effects for mobile touch devices
+    timelineItems.forEach(item => {
+      item.addEventListener('touchstart', function() {
+        this.classList.add('hover-effect');
+        setTimeout(() => {
+          this.classList.remove('hover-effect');
+        }, 500);
+      });
+    });
+  });
+</script>
+{%- endunless -%}
+
+<div class="brand-timeline-{{ section.id }}" aria-label="Company history timeline">
+  <div class="brand-timeline-container">
+    <div class="timeline-header">
+      <h1>{{ section.settings.title | escape }}</h1>
+      <div>{{ section.settings.description }}</div>
+    </div>
+    
+    <div class="animated-timeline">
+      {% for block in section.blocks %}
+        <div class="timeline-item" {{ block.shopify_attributes }}>
+          <div class="timeline-year">{{ block.settings.year | escape }}</div>
+          <div class="timeline-content">
+            <div class="timeline-connector" aria-hidden="true"></div>
+            <div class="timeline-text">{{ block.settings.description }}</div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+    
+    {%# if section.settings.seo_content != blank or section.settings.seo_keywords != blank %}
+    <!-- <div class="seo-meta-content"> -->
+      {%# if section.settings.seo_content != blank %}
+        <!-- <div>{{ section.settings.seo_content }}</div> -->
+      {%# endif %}
+      
+      {%# if section.settings.seo_keywords != blank %}
+        <!-- <div class="seo-keywords"> -->
+          {%# assign keywords = section.settings.seo_keywords | split: ',' %}
+          {%# for keyword in keywords %}
+            <!-- <span>{{ keyword | strip }}</span> -->
+          {%# endfor %}
+        <!-- </div> -->
+      {%# endif %}
+    <!-- </div> -->
+    {%# endif %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Brand Timeline",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Our Heritage & Craftsmanship"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description",
+      "default": "<p>For nearly two decades, we've been perfecting the art of leather craftsmanship. Our journey reflects our dedication to quality, tradition, and innovation.</p>"
+    },
+    {
+      "type": "header",
+      "content": "SEO Content"
+    },
+    {
+      "type": "richtext",
+      "id": "seo_content",
+      "label": "SEO Content",
+      "info": "Add detailed content about your brand history for SEO."
+    },
+    {
+      "type": "text",
+      "id": "seo_keywords",
+      "label": "SEO Keywords",
+      "info": "Comma separated list of keywords (e.g.: leather, italian, craftsmanship)",
+      "default": "Premium Leather Goods, Italian Leather Craftsmanship, Handcrafted Leather"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent Color",
+      "default": "#d4a762"
+    },
+    {
+      "type": "color",
+      "id": "text_dark",
+      "label": "Dark Text",
+      "default": "#222222"
+    },
+    {
+      "type": "color",
+      "id": "text_medium",
+      "label": "Medium Text",
+      "default": "#555555"
+    },
+    {
+      "type": "color",
+      "id": "text_light",
+      "label": "Light Text",
+      "default": "#777777"
+    },
+    {
+      "type": "color",
+      "id": "background",
+      "label": "Background Color",
+      "default": "#f5f5f5"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "timeline_item",
+      "name": "Timeline Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "year",
+          "label": "Year",
+          "default": "2005"
+        },
+        {
+          "type": "richtext",
+          "id": "description",
+          "label": "Description",
+          "default": "<p>Founded our workshop in Florence, Italy, focusing on traditional leather crafting techniques.</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Brand Timeline",
+      "category": "Custom",
+      "blocks": [
+        {
+          "type": "timeline_item",
+          "settings": {
+            "year": "2005",
+            "description": "<p>Founded our workshop in Florence, Italy, focusing on traditional leather crafting techniques.</p>"
+          }
+        },
+        {
+          "type": "timeline_item",
+          "settings": {
+            "year": "2010",
+            "description": "<p>Began exporting our handcrafted leather goods to select boutiques across Europe.</p>"
+          }
+        },
+        {
+          "type": "timeline_item",
+          "settings": {
+            "year": "2015",
+            "description": "<p>Collaborated with renowned fashion houses for exclusive collections.</p>"
+          }
+        },
+        {
+          "type": "timeline_item",
+          "settings": {
+            "year": "2018",
+            "description": "<p>Launched our e-commerce platform, bringing products directly to customers worldwide.</p>"
+          }
+        },
+        {
+          "type": "timeline_item",
+          "settings": {
+            "year": "2020",
+            "description": "<p>Recognized as a leading online retailer of premium leather goods.</p>"
+          }
+        },
+        {
+          "type": "timeline_item",
+          "settings": {
+            "year": "Present",
+            "description": "<p>Continuing to innovate and expand our product line while upholding quality.</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

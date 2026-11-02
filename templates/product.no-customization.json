@@ -1,0 +1,217 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "judge_me_reviews_review_widget_jDbbNe": {
+          "type": "shopify://apps/judge-me-reviews/blocks/review_widget/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
+          "disabled": true,
+          "settings": {}
+        },
+        "vendor": {
+          "type": "text",
+          "settings": {
+            "text": "{{ product.vendor }}",
+            "text_style": "uppercase"
+          }
+        },
+        "title": {
+          "type": "title",
+          "settings": {}
+        },
+        "judge_me_reviews_preview_badge_4fdcid": {
+          "type": "shopify://apps/judge-me-reviews/blocks/preview_badge/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
+          "disabled": true,
+          "settings": {}
+        },
+        "price": {
+          "type": "price",
+          "settings": {}
+        },
+        "amazon_badge": {
+          "type": "custom_liquid",
+          "settings": {
+            "custom_liquid": "{% render 'qawach-amazon-badge', product: product %}"
+          }
+        },
+        "custom_liquid_XknqNF": {
+          "type": "custom_liquid",
+          "disabled": true,
+          "settings": {
+            "custom_liquid": "{% comment %} In your product-form.liquid {% endcomment %}\n\n<div class=\"color-swatches-wrapper\">\n  <div class=\"color-swatches-grid\">\n    {% for color in product.options_by_name['Color'].values limit: 6 %}\n      <div class=\"color-swatch\" data-value=\"{{ color | escape }}\">\n        <input type=\"radio\" \n               id=\"color-{{ forloop.index }}\" \n               name=\"properties[Color]\" \n               value=\"{{ color | escape }}\"\n               {% if forloop.first %}checked{% endif %}>\n        <label for=\"color-{{ forloop.index }}\" \n               style=\"background-color: {{ color | handle }};\"\n               title=\"{{ color | escape }}\"></label>\n      </div>\n    {% endfor %}\n    \n    {% assign remaining_colors = product.options_by_name['Color'].values.size | minus: 6 %}\n    {% if remaining_colors > 0 %}\n      <button type=\"button\" class=\"color-more-btn\" data-modal-trigger>\n        +{{ remaining_colors }}\n      </button>\n    {% endif %}\n  </div>\n</div>"
+          }
+        },
+        "inventory_pDMa3z": {
+          "type": "inventory",
+          "disabled": true,
+          "settings": {
+            "text_style": "body",
+            "inventory_threshold": 10,
+            "show_inventory_quantity": false
+          }
+        },
+        "leather_color_R8wzKz": {
+          "type": "leather_color",
+          "disabled": true,
+          "settings": {
+            "heading": "Leather Color",
+            "show_required": true,
+            "collection": ""
+          }
+        },
+        "variant_picker": {
+          "type": "variant_picker",
+          "settings": {
+            "picker_type": "button",
+            "swatch_shape": "circle"
+          }
+        },
+        "popup_BhhpVJ": {
+          "type": "popup",
+          "settings": {
+            "text": "",
+            "page": "size-chart"
+          },
+          "disabled": true
+        },
+        "custom_liquid_KYTRhL": {
+          "type": "custom_liquid",
+          "settings": {
+            "custom_liquid": "{%- assign qsz = product.metafields.custom.size_chart.value -%}\n{%- if qsz != blank -%}\n<a href=\"#\" class=\"link\" style=\"display:inline-block;margin:6px 0 14px;font-size:1.5rem;text-underline-offset:3px\"\n   onclick=\"document.getElementById('qawach-size-dialog').showModal();return false;\">📏 Size Guide</a>\n<dialog id=\"qawach-size-dialog\" style=\"width:95%;max-width:860px;max-height:85vh;border:none;border-radius:10px;padding:24px 20px;overflow:auto\">\n  <button type=\"button\" aria-label=\"Close\" onclick=\"this.closest('dialog').close()\"\n          style=\"position:sticky;top:0;float:right;font-size:28px;line-height:1;background:none;border:none;cursor:pointer\">&times;</button>\n  <h2 style=\"margin-top:0\">{{ qsz.title }}</h2>\n  {{ qsz.content }}\n</dialog>\n<script>\n  (function(){var d=document.getElementById('qawach-size-dialog');\n    if(d){d.addEventListener('click',function(e){if(e.target===d){d.close();}});}})();\n</script>\n{%- endif -%}\n"
+          }
+        },
+        "quantity_selector": {
+          "type": "quantity_selector",
+          "settings": {}
+        },
+        "custom_liquid_zKNb3A": {
+          "type": "custom_liquid",
+          "disabled": true,
+          "settings": {
+            "custom_liquid": "<button id=\"openModal\" class=\"button button-primary button-customize\" custom-count=0:\n{% if product.selected_or_first_available_variant.inventory_quantity <= 0 %}\n                    disabled\n                  {% endif %}\n>Show Customization Options</button>"
+          }
+        },
+        "buy_buttons": {
+          "type": "buy_buttons",
+          "settings": {
+            "show_dynamic_checkout": false,
+            "show_gift_card_recipient": true
+          }
+        },
+        "description": {
+          "type": "description",
+          "settings": {}
+        },
+        "collapsible_tab_eYfKwy": {
+          "type": "collapsible_tab",
+          "settings": {
+            "heading": "Care Instructions",
+            "icon": "none",
+            "content": "<p><strong>Simple habits to keep your leather fresh</strong></p><p>Leather’s like a good relationship. The more you care, the longer it lasts.</p><p></p><ul><li>Wipe gently with a soft, dry or slightly damp cloth (no scrubbing, no drama).</li><li>Don’t expose it to too much sunlight or water as this makes the leather get tanned, but not like you’d want it to.</li><li>Skip the regular cleaners. Go for a leather-safe balm or conditioner once in a while.</li><li>Store it cool and dry. If you’re hanging it, use wide hangers for no shoulder dents.</li><li>Never machine wash, and absolutely no ironing (seriously).</li></ul><p>Take care of it, and it’ll age like fine wine.<br/></p>",
+            "page": ""
+          }
+        },
+        "collapsible_tab_wL4rC8": {
+          "type": "collapsible_tab",
+          "settings": {
+            "heading": "Leather Quality & Craftsmanship",
+            "icon": "none",
+            "content": "<p><strong>It’s not just leather. It’s a whole mood.</strong></p><p>Every piece we make starts with handpicked leather — real, raw, and rich with texture.<br/><br/>Our artisans don’t just stitch products; they build character into every cut and curve. From soft hides to strong grain textures, we treat every product like it’s the only one.</p><p>Whether you’re wearing it or styling your home with it — our leather speaks without trying too hard.</p><p>Real leather. Real craft. No shortcuts.</p>",
+            "page": ""
+          }
+        },
+        "collapsible_tab_xfX7b7": {
+          "type": "collapsible_tab",
+          "settings": {
+            "heading": "Shipping & Returns",
+            "icon": "none",
+            "content": "<p><strong>Fast shipping. No-fuss returns.</strong></p><p>We ship quickly because waiting sucks.</p><ul><li>Orders usually ship within 48 hours (excluding Sundays and lazy cats).</li><li>Delivery time: 3–7 business days, depending on where you are.</li><li>Got an issue? We have a 7-day return window. Just keep it unused and in original packaging.</li><li>Custom-made items? Those are made just for you, so they can’t be returned unless there’s a legit defect.</li></ul><p>No long forms, no fake promises — just smooth service.</p>",
+            "page": ""
+          }
+        },
+        "share": {
+          "type": "share",
+          "settings": {
+            "share_label": "Share"
+          }
+        },
+        "custom_liquid_zNHKXJ": {
+          "type": "custom_liquid",
+          "disabled": true,
+          "settings": {
+            "custom_liquid": ""
+          }
+        }
+      },
+      "block_order": [
+        "judge_me_reviews_review_widget_jDbbNe",
+        "vendor",
+        "title",
+        "judge_me_reviews_preview_badge_4fdcid",
+        "price",
+        "amazon_badge",
+        "custom_liquid_XknqNF",
+        "inventory_pDMa3z",
+        "leather_color_R8wzKz",
+        "variant_picker",
+        "popup_BhhpVJ",
+        "custom_liquid_KYTRhL",
+        "quantity_selector",
+        "custom_liquid_zKNb3A",
+        "buy_buttons",
+        "description",
+        "collapsible_tab_eYfKwy",
+        "collapsible_tab_wL4rC8",
+        "collapsible_tab_xfX7b7",
+        "share",
+        "custom_liquid_zNHKXJ"
+      ],
+      "settings": {
+        "enable_sticky_info": true,
+        "color_scheme": "scheme-1",
+        "media_size": "large",
+        "constrain_to_viewport": true,
+        "media_fit": "contain",
+        "gallery_layout": "stacked",
+        "mobile_thumbnails": "hide",
+        "media_position": "left",
+        "image_zoom": "lightbox",
+        "hide_variants": true,
+        "enable_video_looping": false,
+        "padding_top": 36,
+        "padding_bottom": 12
+      }
+    },
+    "related-products": {
+      "type": "related-products",
+      "settings": {
+        "heading": "You may also like",
+        "heading_size": "h2",
+        "products_to_show": 4,
+        "columns_desktop": 4,
+        "columns_mobile": "2",
+        "color_scheme": "scheme-1",
+        "image_ratio": "square",
+        "image_shape": "default",
+        "show_secondary_image": true,
+        "show_vendor": false,
+        "show_rating": false,
+        "padding_top": 36,
+        "padding_bottom": 28
+      }
+    }
+  },
+  "order": [
+    "main",
+    "related-products"
+  ]
+}

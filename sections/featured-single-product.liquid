@@ -1,0 +1,42 @@
+{% comment %}
+  This section shows a single product card on the homepage
+{% endcomment %}
+
+{% schema %}
+{
+  "name": "Featured Single Product",
+  "settings": [
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Select product"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_vendor",
+      "label": "Show vendor",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Featured Single Product"
+    }
+  ]
+}
+{% endschema %}
+
+{% if settings.product != blank %}
+  {% assign product = all_products[settings.product] %}
+  <div class="featured-single-product">
+    {% render 'card-product',
+      product: product,
+      media_size: 'medium',
+      show_secondary_image: true,
+      add_image_padding: true,
+      show_vendor: settings.show_vendor
+    %}
+  </div>
+{% else %}
+  <p>No product selected</p>
+{% endif %}

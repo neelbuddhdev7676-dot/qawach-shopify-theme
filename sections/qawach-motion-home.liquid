@@ -1,0 +1,305 @@
+{%- comment -%}
+  Qawach Atelier Motion homepage, built to match the approved light design one-to-one.
+  Products, prices, links and counts are live from the store. Images are chosen in the theme editor
+  (face-free cut-outs and room photos); pillow products fall back to their own photo until a cut-out is chosen.
+  Animation: GSAP + ScrollTrigger + Lenis; visitors who prefer reduced motion get a still page.
+{%- endcomment -%}
+{%- liquid
+  assign s = section.settings
+  assign men_c = s.men_collection
+  assign women_c = s.women_collection
+  assign home_c = s.home_collection
+  assign pillow_c = s.pillow_collection
+  assign logo_src = ''
+  if s.logo != blank
+    assign logo_src = s.logo | image_url: width: 200
+  elsif settings.logo != blank
+    assign logo_src = settings.logo | image_url: width: 200
+  endif
+  assign home_min = home_c.products | map: 'price' | sort | first
+  assign home_from = ''
+  if home_min
+    assign home_from = home_min | divided_by: 100 | times: 100 | money_without_trailing_zeros
+  endif
+  assign all_n = collections.all.products_count
+  assign all_round = all_n | divided_by: 100 | times: 100
+-%}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Manrope:wght@400;500;600&display=swap">
+{{ 'qawach-motion.css' | asset_url | stylesheet_tag }}
+<style>
+  .shopify-section-group-header-group, .shopify-section-group-footer-group { display: none !important; }
+  body { background: #F4EFE7; }
+  #qm .qm-logo { display: inline-flex; align-items: center; gap: 12px; color: #C9A24A; }
+  #qm .qm-logo svg { display: block; width: auto; flex: none; }
+  #qm .qm-logo-shield { height: 36px; aspect-ratio: 941 / 1128; }
+  #qm .qm-logo-word { height: 14px; aspect-ratio: 821 / 164; }
+  #qm .qm-pre .qm-logo { flex-direction: column; gap: 18px; }
+  #qm .qm-pre .qm-logo-shield { height: 88px; }
+  #qm .qm-pre .qm-logo-word { height: 17px; }
+  #qm img.qm-logo-img { width: auto; height: 38px; }
+  @media (max-width: 749px) {
+    #qm .qm-logo { gap: 10px; }
+    #qm .qm-logo-shield { height: 30px; }
+    #qm .qm-logo-word { height: 12px; }
+    #qm .qm-hero-word { font-size: 17vw; top: 44%; }
+    html.qm-motion #qm .qm-hero-pillow { top: 22%; height: 34%; }
+  }
+</style>
+
+<div id="qm" data-logo="{{ logo_src }}">
+<template id="qm-logo-tpl">{%- render 'qawach-logo', part: 'stack' -%}</template>
+<header class="qm-hdr qm-gut" id="qm-hdr">
+  <a class="qm-brand" href="{{ routes.root_url }}" aria-label="{{ shop.name | escape }} home">
+    {%- if s.logo != blank -%}{{ s.logo | image_url: width: 200 | image_tag: class: 'qm-logo-img', alt: '', height: 38 }}{%- elsif s.show_wordmark -%}{%- render 'qawach-logo', part: 'lockup' -%}{%- else -%}{%- render 'qawach-logo', part: 'shield' -%}{%- endif -%}
+  </a>
+  <nav class="qm-nav" id="qm-nav" aria-label="Main">
+    <a href="{% if men_c %}{{ men_c.url }}{% else %}#qm-jackets{% endif %}">Men</a>
+    <a href="{% if women_c %}{{ women_c.url }}{% else %}#qm-jackets{% endif %}">Women</a>
+    <a href="#qm-home">Home &amp; Pillows</a>
+    <a href="#qm-categories">Categories</a>
+    <a href="#qm-lookbook">Lookbook</a>
+  </nav>
+  <div class="qm-hdr-r">
+    <a class="qm-icon-btn" href="{{ routes.search_url }}" aria-label="Search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></a>
+    <a class="qm-icon-btn qm-bag" href="{{ routes.cart_url }}" aria-label="Bag, {{ cart.item_count }} items"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M5 8h14l-1 13H6L5 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>{%- if cart.item_count > 0 -%}<span class="qm-bag-n">{{ cart.item_count }}</span>{%- endif -%}</a>
+    <button class="qm-icon-btn qm-menu-btn" type="button" id="qm-menu" aria-label="Open menu" aria-expanded="false" aria-controls="qm-nav"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 8h16M4 16h16"/></svg></button>
+  </div>
+</header>
+
+<section class="qm-hero" id="qm-top" aria-label="{{ shop.name | escape }}">
+  <div class="qm-hero-glow" id="qm-heroGlow"></div>
+  <h1 class="qm-hero-word" aria-label="{{ shop.name | escape }}"><span class="qm-l" aria-hidden="true"><span class="qm-li">Q</span></span><span class="qm-l" aria-hidden="true"><span class="qm-li">A</span></span><span class="qm-l" aria-hidden="true"><span class="qm-li">W</span></span><span class="qm-l" aria-hidden="true"><span class="qm-li">A</span></span><span class="qm-l" aria-hidden="true"><span class="qm-li">C</span></span><span class="qm-l" aria-hidden="true"><span class="qm-li">H</span></span></h1>
+  {%- if s.hero_image != blank -%}
+    {{ s.hero_image | image_url: width: 1400 | image_tag: class: 'qm-hero-jacket', alt: 'Black lambskin biker jacket with silver zips and a belted hem', fetchpriority: 'high', sizes: '60vw' }}
+    {%- render 'qawach-qm-img', img: s.hero_pillow_image, fallback: s.hero_pillow_product.featured_image, width: 1000, cls: 'qm-hero-pillow', alt: '', sizes: '40vw' -%}
+  {%- else -%}
+    {%- render 'qawach-qm-img', img: s.hero_pillow_image, fallback: s.hero_pillow_product.featured_image, width: 1400, cls: 'qm-hero-jacket', alt: 'Leather pillow cover', loading: 'eager', sizes: '60vw' -%}
+  {%- endif -%}
+  <p class="qm-hero-second" aria-hidden="true">{{ s.hero_second_1 }} <em>{{ s.hero_second_2 }}</em></p>
+  <div class="qm-hero-foot qm-gut">
+    <p class="qm-hero-line">{{ s.hero_line }}</p>
+    <a class="qm-btn qm-btn-mag" href="#qm-categories" data-cursor="Shop">Shop all categories</a>
+    <span class="qm-scroll-cue"><i></i>Scroll</span>
+  </div>
+</section>
+
+<section class="qm-manifesto qm-gut" aria-label="Our craft">
+  <p id="qm-manifesto">{{ s.manifesto }} <em>{{ s.manifesto_em }}</em></p>
+</section>
+
+<section class="qm-depts qm-gut" aria-labelledby="qm-depts-title">
+  <div class="qm-depts-head">
+    <div><p class="qm-eyebrow">Shop by department</p><h2 class="qm-h2 qm-reveal" id="qm-depts-title">Three ways in</h2></div>
+  </div>
+  <div class="qm-depts-grid">
+    <a class="qm-dept" href="{% if home_c %}{{ home_c.url }}{% else %}#qm-home{% endif %}" data-cursor="Shop">{%- render 'qawach-qm-img', img: s.home_image, fallback: nil, width: 1400, cls: 'qm-dept-img', alt: 'Red leather pillow covers on a white sofa', sizes: '(max-width: 860px) 100vw, 55vw' -%}<span class="qm-dept-cap"><b>Home &amp; Pillows</b><span>{% if home_from != '' %}From {{ home_from }}{% else %}Shop{% endif %}</span></span></a>
+    <a class="qm-dept" href="{% if men_c %}{{ men_c.url }}{% else %}#qm-jackets{% endif %}" data-cursor="Shop">{%- render 'qawach-qm-img', img: s.men_image, fallback: nil, width: 1000, cls: 'qm-dept-img', alt: 'Black leather jacket', sizes: '(max-width: 860px) 100vw, 45vw' -%}<span class="qm-dept-cap"><b>Men</b><span>Shop</span></span></a>
+    <a class="qm-dept" href="{% if women_c %}{{ women_c.url }}{% else %}#qm-jackets{% endif %}" data-cursor="Shop">{%- render 'qawach-qm-img', img: s.women_image, fallback: nil, width: 1000, cls: 'qm-dept-img', alt: 'Black quilted leather jacket', sizes: '(max-width: 860px) 100vw, 45vw' -%}<span class="qm-dept-cap"><b>Women</b><span>Shop</span></span></a>
+  </div>
+</section>
+
+<section class="qm-cats qm-gut" id="qm-categories" aria-labelledby="qm-cats-title">
+  <div class="qm-cats-head">
+    <div><p class="qm-eyebrow">Every category</p><h2 class="qm-h2 qm-reveal" id="qm-cats-title">Find exactly <em>what you want</em></h2></div>
+    <a class="qm-link" href="{{ routes.all_products_collection_url }}">View all {% if all_round > 0 %}{{ all_round }}+{% endif %} styles</a>
+  </div>
+  <ul class="qm-cat-list" id="qm-catList">
+    {%- for block in section.blocks -%}
+      {%- if block.type == 'category' and block.settings.collection != blank -%}
+        {%- assign c = block.settings.collection -%}
+        {%- assign cim = block.settings.image -%}
+        <li class="qm-cat-row" {{ block.shopify_attributes }}><a href="{{ c.url }}" data-img="{% if cim %}{{ cim | image_url: width: 520 }}{% endif %}">{%- if cim -%}<img class="qm-cat-thumb" src="{{ cim | image_url: width: 120 }}" alt="" loading="lazy" width="56" height="56">{%- else -%}<img class="qm-cat-thumb qm-empty" src="{{ logo_src }}" alt="" loading="lazy" width="56" height="56">{%- endif -%}<span class="qm-cat-name">{{ block.settings.label | default: c.title }}{%- if block.settings.tag != blank -%} <span class="qm-cat-tag">{{ block.settings.tag }}</span>{%- endif -%}</span><span class="qm-cat-count">{{ c.products_count }} {% if c.products_count == 1 %}style{% else %}styles{% endif %}</span></a></li>
+      {%- endif -%}
+    {%- endfor -%}
+  </ul>
+</section>
+
+<div class="qm-show-intro qm-gut" id="qm-jackets"><p class="qm-eyebrow">Outerwear</p><h2 class="qm-h2 qm-reveal">The jackets</h2></div>
+{%- assign slide_count = 0 -%}
+{%- for block in section.blocks -%}{%- if block.type == 'slide' -%}{%- assign slide_count = slide_count | plus: 1 -%}{%- endif -%}{%- endfor -%}
+<section class="qm-show" style="--n: {{ slide_count | at_least: 1 }}" aria-label="Jacket showcase">
+  <div class="qm-show-sticky" id="qm-showSticky">
+    {%- for block in section.blocks -%}
+      {%- if block.type == 'slide' -%}
+        {%- assign b = block.settings -%}
+        {%- assign p = b.product -%}
+        {%- liquid
+          assign sl_name = b.label
+          assign sl_url = b.link
+          assign sl_fb = nil
+          if p != blank
+            if sl_name == blank
+              assign sl_name = p.title | remove: ' | QAWACH' | remove: 'QAWACH ' | remove: 'Qawach ' | replace: ' – ', ', '
+            endif
+            if sl_url == blank
+              assign sl_url = p.url
+            endif
+          endif
+          if sl_url == blank
+            assign sl_url = '#qm-categories'
+          endif
+        -%}
+        <article class="qm-slide qm-gut" data-bg="{{ b.bg }}" {{ block.shopify_attributes }}>
+          <div class="qm-slide-media">{%- render 'qawach-qm-img', img: b.image, fallback: sl_fb, width: 1200, cls: 'qm-slide-img', alt: sl_name, sizes: '(max-width: 860px) 90vw, 50vw' -%}</div>
+          <div class="qm-slide-copy">
+            <p class="qm-eyebrow">{{ b.eyebrow }}</p>
+            <h3>{{ sl_name }}</h3>
+            {%- if b.text != blank -%}<p class="qm-desc">{{ b.text }}</p>{%- endif -%}
+            <div class="qm-slide-buy">{%- if p != blank -%}<span class="qm-price">{% if p.price_varies %}From {% endif %}{{ p.price_min | money_without_trailing_zeros }}</span>{%- endif -%}<a class="qm-btn qm-btn-mag" href="{{ sl_url }}" data-cursor="{% if p != blank %}Shop{% else %}Explore{% endif %}">{{ b.button | default: 'Shop now' }}</a></div>
+          </div>
+        </article>
+      {%- endif -%}
+    {%- endfor -%}
+    <div class="qm-show-count" aria-hidden="true"><span id="qm-showNum">01</span><span class="qm-show-bar"><i id="qm-showBar"></i></span><span>{{ slide_count | prepend: '0' | slice: -2, 2 }}</span></div>
+  </div>
+</section>
+
+<section class="qm-home" id="qm-home" aria-labelledby="qm-home-title">
+  <div class="qm-home-scene qm-gut" id="qm-homeScene">
+    {%- assign fi = 0 -%}
+    {%- assign sp = '1.2,0.7,0.9,1.5,0.5,1.1' | split: ',' -%}
+    {%- for block in section.blocks -%}
+      {%- if block.type == 'float' -%}
+        {%- assign fi = fi | plus: 1 -%}
+        {%- assign spi = fi | minus: 1 | modulo: 6 -%}
+        {%- assign f_im = block.settings.image -%}
+        {%- assign f_mx = '' -%}
+        {%- if f_im == blank and block.settings.product != blank -%}{%- assign f_im = block.settings.product.featured_image -%}{%- assign f_mx = ' qm-mx' -%}{%- endif -%}
+        {%- assign cls = 'qm-float qm-f' | append: fi | append: f_mx -%}
+        {%- assign spd = sp[spi] -%}
+        {%- if f_im -%}{{ f_im | image_url: width: 700 | image_tag: loading: 'lazy', class: cls, alt: '', data-speed: spd }}{%- endif -%}
+      {%- endif -%}
+    {%- endfor -%}
+    <div class="qm-home-title">
+      <p class="qm-eyebrow">The Home Collection</p>
+      <h2 id="qm-home-title">{{ s.home_title }} <em>{{ s.home_title_em }}</em></h2>
+      <p>{{ s.home_text }}{% if home_from != '' %}, from {{ home_from }}{% endif %}.</p>
+      <a class="qm-btn qm-btn-mag" href="#qm-pillows" data-cursor="Shop">Shop pillow covers</a>
+    </div>
+  </div>
+
+  {%- capture shade_json -%}[{%- assign si = 0 -%}{%- for block in section.blocks -%}{%- if block.type == 'shade' and block.settings.product != blank -%}{%- assign sp_p = block.settings.product -%}{%- assign s_im = block.settings.image -%}{%- assign s_mx = false -%}{%- if s_im == blank -%}{%- assign s_im = sp_p.featured_image -%}{%- assign s_mx = true -%}{%- endif -%}{%- assign s_name = block.settings.name | default: sp_p.title | remove: ' | QAWACH' | remove: 'QAWACH ' | remove: 'Qawach ' | replace: ' – ', ', ' -%}{%- capture s_price -%}{% if sp_p.price_varies %}From {% endif %}{{ sp_p.price_min | money_without_trailing_zeros }}{%- endcapture -%}{%- if si > 0 -%},{%- endif -%}{"img":{{ s_im | image_url: width: 1000 | json }},"mx":{{ s_mx | json }},"alt":{{ s_name | json }},"name":{{ s_name | json }},"price":{{ s_price | json }},"desc":{{ block.settings.text | json }},"url":{{ sp_p.url | json }}}{%- assign si = si | plus: 1 -%}{%- endif -%}{%- endfor -%}]{%- endcapture -%}
+  <script type="application/json" id="qm-shade-data">{{ shade_json }}</script>
+  {%- assign first_shade = nil -%}
+  {%- for block in section.blocks -%}{%- if block.type == 'shade' and block.settings.product != blank -%}{%- assign first_shade = block -%}{%- break -%}{%- endif -%}{%- endfor -%}
+  {%- if first_shade -%}
+    {%- assign fp = first_shade.settings.product -%}
+    {%- assign fp_name = first_shade.settings.name | default: fp.title | remove: ' | QAWACH' | remove: 'QAWACH ' | remove: 'Qawach ' | replace: ' – ', ', ' -%}
+    <div class="qm-shade qm-gut">
+      <div class="qm-shade-stage">{%- render 'qawach-qm-img', img: first_shade.settings.image, fallback: fp.featured_image, width: 1000, cls: 'qm-shade-img', alt: fp_name, id: 'qm-shadeImg', sizes: '(max-width: 860px) 90vw, 45vw' -%}</div>
+      <div class="qm-shade-copy">
+        <p class="qm-eyebrow">Pick your shade</p>
+        <h3 id="qm-shade-title">{{ fp_name }}</h3>
+        <p id="qm-shadeDesc">{{ first_shade.settings.text }}</p>
+        <span class="qm-price" id="qm-shadePrice">{% if fp.price_varies %}From {% endif %}{{ fp.price_min | money_without_trailing_zeros }}</span>
+        <div class="qm-chips" role="group" aria-label="Shade">
+          {%- assign si = 0 -%}
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'shade' and block.settings.product != blank -%}
+              <button class="qm-chip" type="button" aria-pressed="{% if si == 0 %}true{% else %}false{% endif %}" data-i="{{ si }}" {{ block.shopify_attributes }}><i style="background: {{ block.settings.swatch }}"></i>{{ block.settings.label }}</button>
+              {%- assign si = si | plus: 1 -%}
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+        <div><a class="qm-btn qm-btn-mag" href="{{ fp.url }}" data-cursor="Shop" id="qm-shadeLink">Shop this cover</a></div>
+      </div>
+    </div>
+  {%- endif -%}
+
+  <div class="qm-gut" id="qm-pillows">
+    <div class="qm-pil-row-head">
+      <div><p class="qm-eyebrow">Pillow covers</p><h2 class="qm-h2 qm-reveal">Every shape, every room</h2></div>
+      <div class="qm-pil-nav"><button type="button" id="qm-pilPrev" aria-label="Previous pillow covers"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button><button type="button" id="qm-pilNext" aria-label="Next pillow covers"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button></div>
+    </div>
+    <div class="qm-pil-track" id="qm-pilTrack">
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'pillow' and block.settings.product != blank -%}
+          {%- assign p = block.settings.product -%}
+          {%- assign pn = block.settings.name | default: p.title | remove: ' | QAWACH' | remove: 'QAWACH ' | remove: 'Qawach ' | replace: ' – ', ', ' -%}
+          <a class="qm-pcard" href="{{ p.url }}" data-cursor="Drag" {{ block.shopify_attributes }}><div class="qm-pcard-media">{%- render 'qawach-qm-img', img: block.settings.image, fallback: p.featured_image, width: 640, cls: 'qm-pcard-img', alt: pn, sizes: '(max-width: 860px) 60vw, 23vw' -%}</div><span class="qm-pcard-name">{{ pn }}</span><span class="qm-pcard-price">{% if p.price_varies %}From {% endif %}{{ p.price_min | money_without_trailing_zeros }}</span></a>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </div>
+
+  <div class="qm-rooms qm-gut">
+    {%- if s.room_1 != blank -%}<figure class="qm-room qm-reveal-clip" style="margin: 0">{{ s.room_1 | image_url: width: 1200 | image_tag: loading: 'lazy', alt: s.room_1_label, sizes: '(max-width: 860px) 100vw, 50vw' }}<span>{{ s.room_1_label }}</span></figure>{%- endif -%}
+    {%- if s.room_2 != blank -%}<figure class="qm-room qm-reveal-clip" style="margin: 0">{{ s.room_2 | image_url: width: 1200 | image_tag: loading: 'lazy', alt: s.room_2_label, sizes: '(max-width: 860px) 100vw, 50vw' }}<span>{{ s.room_2_label }}</span></figure>{%- endif -%}
+  </div>
+</section>
+
+{%- assign look_count = 0 -%}
+{%- for block in section.blocks -%}{%- if block.type == 'look' and block.settings.image != blank -%}{%- assign look_count = look_count | plus: 1 -%}{%- endif -%}{%- endfor -%}
+<section class="qm-gal{% if look_count == 0 %} qm-off{% endif %}" id="qm-lookbook" aria-labelledby="qm-gal-title">
+  <div class="qm-gal-head qm-gut"><p class="qm-eyebrow">Lookbook</p><h2 class="qm-h2" id="qm-gal-title">On the road, and at home.</h2></div>
+  <div class="qm-gal-track qm-gut" id="qm-galTrack">
+    {%- for block in section.blocks -%}
+      {%- if block.type == 'look' and block.settings.image != blank -%}
+        {%- assign c = block.settings.collection -%}
+        {%- assign l_url = block.settings.link | default: c.url | default: '#qm-categories' -%}
+        <a class="qm-panel" href="{{ l_url }}" data-cursor="View" {{ block.shopify_attributes }}><div class="qm-panel-media">{{ block.settings.image | image_url: width: 900 | image_tag: loading: 'lazy', alt: block.settings.label, sizes: '(max-width: 860px) 75vw, 34vw' }}</div><div class="qm-panel-cap"><b>{{ block.settings.label | default: c.title }}</b><span>{{ block.settings.sub | default: 'Shop' }}</span></div></a>
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+</section>
+
+<section class="qm-expand" aria-labelledby="qm-expand-title">
+  <div class="qm-expand-frame" id="qm-expandFrame">{%- render 'qawach-qm-img', img: s.closeup_image, fallback: nil, width: 2000, cls: 'qm-expand-img', alt: 'Close-up of distressed brown leather with brass snaps and contrast stitching', sizes: '100vw', id: 'qm-expandImg' -%}</div>
+  <div class="qm-expand-copy qm-gut" id="qm-expandCopy">
+    <h2 id="qm-expand-title">Leather ages.<br><em>That's the point.</em></h2>
+    <p>Real leather creases where you move and softens where you rest. No two Qawach pieces age the same way.</p>
+  </div>
+</section>
+
+<section class="qm-loved qm-gut" aria-labelledby="qm-loved-title">
+  <div class="qm-loved-head">
+    <div><p class="qm-eyebrow">Most loved</p><h2 id="qm-loved-title" class="qm-h2 qm-reveal">The ones people come back for</h2></div>
+    <a class="qm-link" href="{{ routes.all_products_collection_url }}">View all</a>
+  </div>
+  <div class="qm-cards" id="qm-cards">
+    {%- for block in section.blocks -%}
+      {%- if block.type == 'loved' and block.settings.product != blank -%}
+        {%- assign p = block.settings.product -%}
+        {%- assign pn = block.settings.name | default: p.title | remove: ' | QAWACH' | remove: 'QAWACH ' | remove: 'Qawach ' | replace: ' – ', ', ' -%}
+        {%- assign l_fb = nil -%}
+        {%- if block.settings.use_product_photo -%}{%- assign l_fb = p.featured_image -%}{%- endif -%}
+        <a class="qm-card" href="{{ p.url }}" data-cursor="View" {{ block.shopify_attributes }}><div class="qm-card-media">{%- render 'qawach-qm-img', img: block.settings.image, fallback: l_fb, width: 800, cls: 'qm-card-img', alt: pn, sizes: '(max-width: 860px) 45vw, 22vw' -%}<span class="qm-card-quick">Quick view</span></div><span class="qm-card-kind">{{ block.settings.kind }}</span><span class="qm-card-name">{{ pn }}</span><span class="qm-card-price">{% if p.price_varies %}From {% endif %}{{ p.price_min | money_without_trailing_zeros }}</span></a>
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+</section>
+
+<section class="qm-custom" id="qm-custom" aria-labelledby="qm-custom-title">
+  <div class="qm-in qm-gut">
+    <div>
+      <h2 id="qm-custom-title" class="qm-reveal">Made to your <em>measurements.</em></h2>
+      <p>{{ s.custom_text }}</p>
+    </div>
+    <a class="qm-btn qm-btn-mag" href="{{ s.custom_link | default: '/pages/contact' }}" data-cursor="Start">Start a custom order</a>
+  </div>
+</section>
+
+<div class="qm-marq" aria-hidden="true"><div class="qm-marq-track" id="qm-marq"><span>Jackets <i>✦</i> Pillow covers <i>✦</i> Lambskin <i>✦</i> Suede <i>✦</i> Made to measure <i>✦</i></span><span>Jackets <i>✦</i> Pillow covers <i>✦</i> Lambskin <i>✦</i> Suede <i>✦</i> Made to measure <i>✦</i></span></div></div>
+
+<footer class="qm-gut qm-foot">
+  <p class="qm-foot-word" id="qm-footWord" aria-label="{{ shop.name | escape }}"><span class="qm-l" aria-hidden="true"><span class="qm-li">Q</span></span><span class="qm-l" aria-hidden="true"><span class="qm-li">A</span></span><span class="qm-l" aria-hidden="true"><span class="qm-li">W</span></span><span class="qm-l" aria-hidden="true"><span class="qm-li">A</span></span><span class="qm-l" aria-hidden="true"><span class="qm-li">C</span></span><span class="qm-l" aria-hidden="true"><span class="qm-li">H</span></span></p>
+  <div class="qm-foot-row">
+    <nav aria-label="Footer">
+      {%- for link in linklists[s.footer_menu].links -%}<a href="{{ link.url }}">{{ link.title }}</a>{%- endfor -%}
+      <a href="#qm-custom">Custom orders</a>
+    </nav>
+    <span>&copy; {{ 'now' | date: '%Y' }} {{ s.copyright }}</span>
+  </div>
+</footer>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js" defer></script>
+<script src="{{ 'qawach-motion.js' | asset_url }}" defer></script>
+
+{% schema %}
+{"name":"Atelier motion home","tag":"div","class":"qm-section","settings":[{"type":"header","content":"Brand"},{"type":"image_picker","id":"logo","label":"Custom header logo (optional)","info":"Leave empty to use the gold Qawach logo."},{"type":"checkbox","id":"show_wordmark","label":"Show QAWACH wordmark next to the shield","default":true},{"type":"header","content":"Opening screen"},{"type":"image_picker","id":"hero_image","label":"Jacket (transparent cut-out)","info":"Use qm-jacket-biker.webp"},{"type":"image_picker","id":"hero_pillow_image","label":"Pillow that swings in (transparent cut-out)","info":"Use qm-pillow-red.webp"},{"type":"product","id":"hero_pillow_product","label":"Pillow product (photo used until a cut-out is chosen)"},{"type":"text","id":"hero_line","label":"Small line","default":"Hand-cut leather jackets and pillow covers."},{"type":"text","id":"hero_second_1","label":"Scroll line","default":"Made by hand."},{"type":"text","id":"hero_second_2","label":"Scroll line (italic)","default":"Worn, and lived with."},{"type":"textarea","id":"manifesto","label":"Brand story","default":"Every Qawach piece starts as a single hide. Jackets for you, covers for your home, all cut and stitched by hand, then shaped by"},{"type":"text","id":"manifesto_em","label":"Brand story ending (italic)","default":"years of living."},{"type":"header","content":"Departments"},{"type":"collection","id":"home_collection","label":"Home & Pillows collection"},{"type":"image_picker","id":"home_image","label":"Home & Pillows image"},{"type":"collection","id":"men_collection","label":"Men collection"},{"type":"image_picker","id":"men_image","label":"Men image"},{"type":"collection","id":"women_collection","label":"Women collection"},{"type":"image_picker","id":"women_image","label":"Women image"},{"type":"header","content":"Home Collection"},{"type":"text","id":"home_title","label":"Heading","default":"Leather for"},{"type":"text","id":"home_title_em","label":"Heading (italic)","default":"the living room."},{"type":"textarea","id":"home_text","label":"Text (the lowest price is added automatically)","default":"Genuine leather pillow covers, cut and stitched by hand. Square, rectangle, round and bolster"},{"type":"collection","id":"pillow_collection","label":"Pillow cover collection"},{"type":"image_picker","id":"room_1","label":"Room photo 1"},{"type":"text","id":"room_1_label","label":"Room 1 label","default":"Living room"},{"type":"image_picker","id":"room_2","label":"Room photo 2"},{"type":"text","id":"room_2_label","label":"Room 2 label","default":"Bedroom & lounge"},{"type":"header","content":"Close-up"},{"type":"image_picker","id":"closeup_image","label":"Leather close-up"},{"type":"header","content":"Made to measure and footer"},{"type":"textarea","id":"custom_text","label":"Made to measure text","default":"Send us your chest, waist, sleeve and length, and we cut the jacket to fit you."},{"type":"url","id":"custom_link","label":"Made to measure link"},{"type":"link_list","id":"footer_menu","label":"Footer menu","default":"footer"},{"type":"text","id":"copyright","label":"Copyright name","default":"Qawach Leather"}],"blocks":[{"type":"category","name":"Category","settings":[{"type":"collection","id":"collection","label":"Collection"},{"type":"image_picker","id":"image","label":"Hover image"},{"type":"text","id":"label","label":"Name (optional)"},{"type":"text","id":"tag","label":"Tag (optional)"}]},{"type":"slide","name":"Jacket slide","limit":6,"settings":[{"type":"product","id":"product","label":"Product (leave empty for an edit slide)"},{"type":"image_picker","id":"image","label":"Image (transparent cut-out)"},{"type":"text","id":"eyebrow","label":"Small label","default":"Men · Lambskin"},{"type":"text","id":"label","label":"Name (optional)"},{"type":"textarea","id":"text","label":"Description"},{"type":"text","id":"button","label":"Button label","default":"Shop now"},{"type":"url","id":"link","label":"Link (optional)"},{"type":"color","id":"bg","label":"Background","default":"#EDE6DA"}]},{"type":"float","name":"Floating pillow","limit":6,"settings":[{"type":"image_picker","id":"image","label":"Image (transparent cut-out)"},{"type":"product","id":"product","label":"Product (photo used until a cut-out is chosen)"}]},{"type":"shade","name":"Pillow shade","limit":6,"settings":[{"type":"product","id":"product","label":"Product"},{"type":"image_picker","id":"image","label":"Image (transparent cut-out)"},{"type":"text","id":"label","label":"Chip label","default":"Red"},{"type":"color","id":"swatch","label":"Swatch","default":"#8E2A26"},{"type":"text","id":"name","label":"Name (optional)"},{"type":"textarea","id":"text","label":"Description"}]},{"type":"pillow","name":"Pillow card","limit":16,"settings":[{"type":"product","id":"product","label":"Product"},{"type":"image_picker","id":"image","label":"Image (transparent cut-out)"},{"type":"text","id":"name","label":"Name (optional)"}]},{"type":"look","name":"Lookbook panel","limit":8,"settings":[{"type":"image_picker","id":"image","label":"Image"},{"type":"text","id":"label","label":"Name"},{"type":"text","id":"sub","label":"Small text","default":"Shop"},{"type":"url","id":"link","label":"Link"},{"type":"collection","id":"collection","label":"Collection (if no link)"}]},{"type":"loved","name":"Most loved card","limit":8,"settings":[{"type":"product","id":"product","label":"Product"},{"type":"image_picker","id":"image","label":"Image (transparent cut-out)"},{"type":"checkbox","id":"use_product_photo","label":"Use product photo if no image","default":false},{"type":"text","id":"kind","label":"Small label","default":"Home"},{"type":"text","id":"name","label":"Name (optional)"}]}],"presets":[{"name":"Atelier motion home"}]}
+{% endschema %}

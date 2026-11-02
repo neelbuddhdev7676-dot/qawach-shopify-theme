@@ -1,0 +1,175 @@
+{% schema %}
+{
+  "name": "Trust Ticker",
+  "settings": [
+    {
+      "type": "text",
+      "id": "static_phrases",
+      "label": "Static Phrases",
+      "default": "HAND-CUT FULL-GRAIN • SOLID BRASS ZIPPERS • 4-6 WEEK BUILD • LOCAL ARTISANS • ZERO WASTE DESIGN •",
+      "info": "Separate phrases with • characters"
+    },
+    {
+      "type": "range",
+      "id": "speed",
+      "min": 10,
+      "max": 100,
+      "step": 5,
+      "unit": "s",
+      "label": "Animation Speed",
+      "default": 20
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#A52A2A"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#FFFFFF"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Trust Ticker"
+    }
+  ]
+}
+{% endschema %}
+
+<style>
+  .ticker-master {
+    border-top: 1px solid rgba(var(--color-foreground), 0.1);
+    border-bottom: 1px solid rgba(var(--color-foreground), 0.1);
+    overflow: hidden;
+    background: {{ section.settings.background_color }};
+  }
+
+  .ticker-wrapper {
+    --ticker-speed: {{ section.settings.speed }}s;
+    --translate-amount: -100%; /* fallback until JS sets real width */
+    display: flex;
+    overflow: hidden;
+    position: relative;
+    background-color: {{ section.settings.background_color }};
+    padding: 2rem 0;
+    visibility: hidden; /* hide until JS ready */
+  }
+
+  .ticker-wrapper.ready {
+    visibility: visible;
+  }
+
+  .ticker-track {
+    display: flex;
+    white-space: nowrap;
+    animation: ticker-scroll var(--ticker-speed) linear infinite;
+    will-change: transform;
+  }
+
+  .ticker-wrapper:hover .ticker-track {
+    animation-play-state: paused;
+    cursor: default;
+  }
+
+  @keyframes ticker-scroll {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(var(--translate-amount)); }
+  }
+
+  .ticker-item {
+    padding: 0 2.4rem 0 0;
+    font-family: var(--font-body-family);
+    font-weight: var(--font-body-weight);
+    font-size: clamp(1.2rem, 1.5vw, 1.4rem);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: {{ section.settings.text_color }};
+    display: flex;
+    align-items: center;
+  }
+
+  .ticker-item::after {
+    content: "•";
+    margin-left: 2.4rem;
+    opacity: 0.6;
+    font-size: 0.8em;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ticker-item {
+      padding: 0 1.6rem 0 0;
+    }
+    .ticker-item::after {
+      margin-left: 1.6rem;
+    }
+  }
+</style>
+
+<div class="ticker-master" role="marquee" aria-live="polite">
+  <div class="ticker-wrapper">
+    <div class="ticker-track" id="ticker-original">
+      {%- assign phrases = section.settings.static_phrases | split: '•' -%}
+      {%- for phrase in phrases -%}
+        {%- assign trimmed = phrase | strip -%}
+        {%- if trimmed != blank -%}
+          <span class="ticker-item">{{ trimmed }}</span>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+    <!-- Clones will be injected here by JS -->
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const wrapper     = document.querySelector('.ticker-wrapper');
+    const original    = document.getElementById('ticker-original');
+    if (!wrapper || !original) return;
+
+    // 1. How many clones?
+    const calcClones = (cw, tw) => {
+      const base = 2;
+      const extra = Math.ceil(cw / tw);
+      return base + extra;
+    };
+
+    // 2. (Re)create clones
+    const createClones = () => {
+      wrapper.querySelectorAll('[id^="ticker-clone-"]').forEach(n => n.remove());
+      const cw = wrapper.offsetWidth;
+      const tw = original.scrollWidth;
+      const count = calcClones(cw, tw);
+      for (let i = 0; i < count; i++) {
+        const clone = original.cloneNode(true);
+        clone.id = `ticker-clone-${i}`;
+        clone.setAttribute('aria-hidden', 'true');
+        wrapper.appendChild(clone);
+      }
+    };
+
+    // 3. Set translate amount on wrapper
+    const setTranslate = () => {
+      const tw = original.scrollWidth;
+      wrapper.style.setProperty('--translate-amount', `-${tw}px`);
+    };
+
+    // 4. Initialize & show
+    createClones();
+    setTranslate();
+    wrapper.classList.add('ready');
+
+    // 5. Recalc on resize (debounced)
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        createClones();
+        setTranslate();
+      }, 100);
+    });
+  });
+</script>

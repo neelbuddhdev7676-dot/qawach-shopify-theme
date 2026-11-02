@@ -1,0 +1,44 @@
+{% layout none %}
+{
+  "brand": "Qawach",
+  "business_location": "United States",
+  "primary_market": "United States",
+  "ships_worldwide": true,
+  "custom_material_options": [
+    "Lambskin Leather",
+    "Cowhide Leather",
+    "Sheepskin Leather",
+    "Nappa Leather",
+    "Suede Leather",
+    "Full-Grain Leather",
+    "Top-Grain Leather"
+  ],
+  "website": "{{ shop.url }}",
+  "currency": "{{ shop.currency }}",
+  "products": [
+    {% paginate collections.all.products by 50 %}
+      {% for product in collections.all.products %}
+  {% assign gender_value = 'Unisex' %}  {% for col in product.collections %}    {% assign col_title = col.title | downcase %}    {% if col_title contains 'women' or col_title contains 'lady' or col_title contains 'ladies' %}      {% assign gender_value = 'Women' %}      {% break %}    {% elsif col_title contains 'men' %}      {% assign gender_value = 'Men' %}      {% break %}    {% endif %}  {% endfor %}
+{% assign celeb_flag = 'false' %}{% for col in product.collections %}{% assign col_title = col.title | downcase %}{% if col_title contains 'celebrity' or col_title contains 'movie' or col_title contains 'replica' or col_title contains 'inspired' %}
+              {% assign celeb_flag = 'true' %}
+              {% break %}
+            {% endif %}
+          {% endfor %}
+      {
+        "id": "{{ product.id }}",
+        "sku": "{{ product.variants.first.sku | default: 'N/A' }}",
+        "name": "{{ product.title | escape }}",
+        "url": "{{ shop.url }}{{ product.url }}",
+        "price": "{{ product.price | money_without_currency | remove: ',' | strip }}",
+        "currency": "USD",
+        "image": "https:{{ product.featured_image | img_url: '800x800' }}",
+        "celebrity_inspired": {{ celeb_flag }},
+        "availability": "{% if product.available %}in_stock{% else %}out_of_stock{% endif %}",
+        "category": "{{ product.type | default: 'Leather Fashion' | escape }}",
+        "customizable": true,
+        "gender": "{{ gender_value }}"
+      }{% unless forloop.last and paginate.next.is_nil? %},{% endunless %}
+      {% endfor %}
+    {% endpaginate %}
+  ]
+}

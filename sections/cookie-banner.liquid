@@ -1,0 +1,82 @@
+<!-- Cookie Consent Banner -->
+<div id="cookie-banner" class="cookie-banner">
+  <p>
+    This website uses cookies to ensure you get the best experience.
+    <a href="/policies/privacy-policy" target="_blank">Learn more</a>
+  </p>
+  <button id="accept-cookies">Accept</button>
+  <button id="reject-cookies">Reject</button>
+</div>
+
+<style>
+.cookie-banner {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  right: 20px;
+  background: #222;
+  color: #fff;
+  padding: 10px;
+  text-align: center;
+  border-radius: 5px;
+  display: none;
+  z-index: 2000;
+}
+.cookie-banner a {
+  color: #FFD700;
+  text-decoration: underline;
+}
+#accept-cookies, #reject-cookies {
+  border: none;
+  padding: 5px 10px;
+  margin: 10px 5px 0 5px;
+  cursor: pointer;
+  font-weight: bold;
+  border-radius: 3px;
+}
+#accept-cookies {
+  background: #FFD700;
+  color: black;
+}
+#accept-cookies:hover {
+  background: #ffcc00;
+}
+#reject-cookies {
+  background: #555;
+  color: #fff;
+}
+#reject-cookies:hover {
+  background: #666;
+}
+/* Responsive Design */
+@media (max-width: 768px) {
+  .cookie-banner {
+    bottom: 45px;
+    left: 15px;
+    right: 15px;
+  }
+}
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  // Check if a cookie preference has already been set
+  if (!localStorage.getItem("cookieConsent")) {
+    document.getElementById("cookie-banner").style.display = "block";
+  }
+  
+  // Accept button functionality
+  document.getElementById("accept-cookies").addEventListener("click", function() {
+    localStorage.setItem("cookieConsent", "accepted");
+    document.getElementById("cookie-banner").style.display = "none";
+    // Here, you can also load any non-essential scripts that require cookies.
+  });
+  
+  // Reject button functionality
+  document.getElementById("reject-cookies").addEventListener("click", function() {
+    localStorage.setItem("cookieConsent", "rejected");
+    document.getElementById("cookie-banner").style.display = "none";
+    // Ensure non-essential cookies and tracking scripts are not loaded.
+  });
+});
+</script>

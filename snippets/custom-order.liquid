@@ -1,0 +1,359 @@
+<div class="customization-page-wrapper custom-order-page">
+  <script async src="{{ 'customization-modal.js' | asset_url }}"></script>
+
+  <div class="modal-body custom-order-page-container">
+    <!-- Hide the left menu on the custom order page -->
+    <!--
+      <div class="custom-order-size" style="max-width:150px;">
+        <label for="size_select">Size:</label>
+        <select id="size_select" name="properties[Size]">
+          {%# for v in selected_product.variants %}
+            <option
+              value="{{ v.id }}"
+              {% #if forloop.first %}
+                selected
+              {%# endif %}
+            >
+              {{ v.title }}
+            </option>
+          {%# endfor %}
+        </select>
+        <button id="openSizeChart" class="size-chart-button">Size Guide</button>
+      </div>
+    -->
+    <!-- Trigger Button -->
+
+    <!-- Modal -->
+    <!--
+      <div id="sizeChartModal" class="size-modal-overlay hidden">
+        <div class="size-modal">
+          <button class="close-btn" aria-label="Close Size Guide">&times;</button>
+          <h2>Size Guide</h2>
+
+          <div class="size-chart-container">
+            <div class="size-chart-table-wrapper">
+              <table class="size-chart-table">
+                <thead>
+                  <tr>
+                    <th>SIZE</th>
+                    <th>Body Chest</th>
+                    <th>Length</th>
+                    <th>Jacket Chest</th>
+                    <th>Waist</th>
+                    <th>Hips</th>
+                    <th>Shoulder</th>
+                    <th>Sleeves</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>XS</td>
+                    <td>33 - 34</td>
+                    <td>25.5</td>
+                    <td>38</td>
+                    <td>35</td>
+                    <td>36</td>
+                    <td>17</td>
+                    <td>24.5</td>
+                  </tr>
+                  <tr>
+                    <td>S</td>
+                    <td>35 - 36</td>
+                    <td>26</td>
+                    <td>40</td>
+                    <td>37</td>
+                    <td>38</td>
+                    <td>17.5</td>
+                    <td>25</td>
+                  </tr>
+                  <tr>
+                    <td>M</td>
+                    <td>37 - 38</td>
+                    <td>27</td>
+                    <td>42</td>
+                    <td>39</td>
+                    <td>40</td>
+                    <td>18</td>
+                    <td>25.5</td>
+                  </tr>
+                  <tr>
+                    <td>L</td>
+                    <td>39 - 40</td>
+                    <td>27.5</td>
+                    <td>44</td>
+                    <td>41</td>
+                    <td>42</td>
+                    <td>18.5</td>
+                    <td>26</td>
+                  </tr>
+                  <tr>
+                    <td>XL</td>
+                    <td>41 - 42</td>
+                    <td>28</td>
+                    <td>46</td>
+                    <td>43</td>
+                    <td>44</td>
+                    <td>19</td>
+                    <td>26</td>
+                  </tr>
+                  <tr>
+                    <td>2XL</td>
+                    <td>43 - 44</td>
+                    <td>29</td>
+                    <td>48</td>
+                    <td>45</td>
+                    <td>46</td>
+                    <td>19.5</td>
+                    <td>26.5</td>
+                  </tr>
+                  <tr>
+                    <td>3XL</td>
+                    <td>45 - 46</td>
+                    <td>29.5</td>
+                    <td>50</td>
+                    <td>47</td>
+                    <td>48</td>
+                    <td>20</td>
+                    <td>26.5</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="size-chart-note">All measurements are in inches</p>
+          </div>
+        </div>
+      </div>
+    -->
+      <div class="modal-left">
+        <ul class="modal-menu">
+          <li class="modal-menu-item" data-option="hardwareColor" onclick="loadOption('hardwareColor')">Hardware Color <span class="option-price"></span></li>
+          <li class="modal-menu-item" data-option="lining" onclick="loadOption('jacketLining')">Lining <span class="option-price"></span></li>
+          <li class="modal-menu-item" data-option="quiltedLining" onclick="loadOption('quiltedLining')">Quilted Lining <span class="option-price"></span></li>
+          <li class="modal-menu-item" data-option="monogram" onclick="loadOption('monogram')">Monogram <span class="option-price"></span></li>
+          <li class="modal-menu-item" data-option="measurements" onclick="loadOption('measurements')">Measurements <span class="option-price"></span></li>
+          <li class="modal-menu-item" data-option="comments" onclick="loadOption('comments')">Comments <span class="option-price"></span></li>
+        </ul>
+      </div>
+    <div class="modal-right custom-order-page-right" id="customizationContent">
+      <!-- All option sections will be rendered inline here -->
+    </div>
+  </div>
+
+  <div class="modal-footer custom-order-footer">
+    <div>
+      <button id="orderSaveCustomizations" class="button button-primary">
+        <span class="button__text">Add to Cart</span>
+        {% render 'loading-spinner' %}
+      </button>
+      <!-- <button id="closeModal" class="button button-secondary">Close</button> -->
+    </div>
+  </div>
+</div>
+
+<script>
+  // Initialize Shopify data
+  window.productData = {
+    basePrice: {{ selected_product.price | money_without_currency }},
+    product: {{ selected_product | json }},
+    variantId: {{ selected_product.variants.first.id }}
+  };
+
+  window.customization_options = [
+    {% for product in customization_collection.products %}
+      {
+        title: {{ product.title | json }},
+        image: {{ product.featured_image | img_url: '300x' | json }},
+        price: {{ product.price | divided_by: 100 }},
+        productId: {{ product.id }},
+        variants: {{ product.variants | json }}
+      }{% unless forloop.last %},{% endunless %}
+    {% endfor %}
+  ];
+</script>
+
+<style>
+    .size-chart-container {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      width: 100%;
+      margin-top: 10px;
+      overflow-x: auto;
+    }
+
+    .size-chart-table-wrapper {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .size-chart-table {
+      width: 100%;
+      min-width: 700px;
+      border-collapse: collapse;
+      margin-bottom: 10px;
+      border: 1px solid #e1e1e1;
+      background-color: #fff;
+      font-size: 15px;
+    }
+
+    .size-chart-table th,
+    .size-chart-table td {
+      padding: 12px 14px;
+      text-align: center;
+      border: 1px solid #e1e1e1;
+    }
+
+    .size-chart-table th {
+      background-color: #f9f9f9;
+      font-weight: 600;
+      color: #333;
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .size-chart-table tr:nth-child(even) {
+      background-color: #fdfdfd;
+    }
+
+    .size-chart-table tr:hover {
+      background-color: #f1f1f1;
+    }
+
+    .size-chart-note {
+      text-align: center;
+      font-size: 14px;
+      color: #666;
+      margin-top: 8px;
+      font-style: italic;
+    }
+    .size-chart-button {
+      text-decoration: underline;
+      background-color: unset;
+      border: none;
+      padding: 0;
+      width: fit-content;
+      cursor: pointer;
+    }
+    /* 🔥 Popup Modal Styles */
+  .size-modal-overlay {
+    position: fixed; /* make it float above everything */
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.6); /* dark backdrop */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999; /* stay on top of all content */
+    padding: 20px;
+    overflow-y: auto;
+  }
+
+  .size-modal {
+    background: white;
+    max-width: 900px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 30px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    position: relative;
+    animation: fadeIn 0.3s ease-out;
+  }
+
+  .hidden {
+    display: none !important;
+  }
+
+  .close-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 24px;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .size-chart-table th,
+      .size-chart-table td {
+        padding: 10px 8px;
+        font-size: 13px;
+      }
+
+      .size-chart-table {
+        font-size: 13px;
+      }
+    }
+
+   
+   h2.modal-right-header {
+    display: block !important;
+  }
+
+  /* Top-Bottom Layout */
+  .custom-order-page-container {
+    display: flex;
+    flex-direction: column; /* Stack top to bottom */
+    gap: 20px;
+    width: 100%;
+  }
+  
+  .modal-left {
+    width: 100%; /* Full width */
+    border-right: none;
+    border-bottom: 1px solid #e1e1e1;
+    padding-right: 0;
+    padding-bottom: 15px;
+    margin-bottom: 10px;
+  }
+
+  .modal-menu {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    border: 1px solid #e1e1e1;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .modal-menu-item {
+    flex: 1; /* Spread items evenly */
+    text-align: center;
+    cursor: pointer;
+    padding: 12px 15px;
+    transition: background-color 0.2s;
+    white-space: nowrap;
+    border-right: 1px solid #e1e1e1; /* Separator */
+    background-color: #fff;
+  }
+
+  .modal-menu-item:last-child {
+    border-right: none;
+  }
+
+  .modal-menu-item:hover,
+  .modal-menu-item.active {
+    background-color: #f0f0f0;
+  }
+
+  .modal-right {
+    width: 100%; /* Cover the page */
+    flex-grow: 1;
+  }
+
+  /* Ensure options inside modal-right are also full width/responsive */
+  .custom-order-section {
+    width: 100%;
+  }
+</style>

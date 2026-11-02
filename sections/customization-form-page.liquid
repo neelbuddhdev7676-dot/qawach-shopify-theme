@@ -1,0 +1,33 @@
+{% schema %}
+{
+  "name": "Customization Form",
+  "tag": "section",
+  "class": "section-customization-form",
+  "settings": [
+    {
+      "type": "product",
+      "id": "linked_product",
+      "label": "Main Product"
+    },
+    {
+      "type": "collection",
+      "id": "customization_collection",
+      "label": "Customization Collection"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Customization Form",
+      "category": "Custom"
+    }
+  ]
+}
+{% endschema %}
+
+{% assign selected_product = all_products[section.settings.linked_product] %}
+{% assign customization_collections = collections[section.settings.customization_collection] %}
+
+{% render 'custom-order',
+  customization_collection: collections['customization-addons'],
+  selected_product: all_products['custom-order']
+%}

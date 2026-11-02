@@ -1,0 +1,257 @@
+{% schema %}
+{
+  "name": "Image Grid Cards",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "overlay_heading",
+      "label": "Heading Text",
+      "default": "Explore Our Categories"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image_card",
+      "name": "Image Card",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Card Background Image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Redirect URL"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Image Grid Cards",
+      "category": "Custom"
+    }
+  ]
+}
+{% endschema %}
+
+{% stylesheet %}
+      <style>
+    .image-grid-section {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 0px;
+      text-align: center;
+      margin: 0 auto;
+      max-width: 1360px;
+    }
+
+    .image-grid-heading {
+      font-size: calc(var(--font-heading-scale)* 4rem);
+      font-weight: bold;
+      margin-bottom: 40px;
+      text-align: left;
+    }
+
+    .image-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      margin: 0 auto;
+    }
+
+    .image-grid-card {
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* First card spans 2 columns */
+    .image-grid-card:first-child {
+      grid-column: span 2;
+      aspect-ratio: 4 / 2;
+    }
+
+    /* Second card spans 2 columns */
+    .image-grid-card:nth-child(2) {
+      grid-column: span 2;
+      aspect-ratio: 4 / 2;
+    }
+
+    /* Regular cards (3rd onwards) */
+    .image-grid-card:not(:first-child):not(:nth-child(2)) {
+      grid-column: span 1;
+      aspect-ratio: 3 / 2;
+    }
+
+    .image-grid-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .image-grid-overlay {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      padding: 20px;
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.6), transparent);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      height: 100%;
+      box-sizing: border-box;
+    }
+
+    .image-grid-overlay h3,
+    .image-grid-overlay p {
+      margin: 0;
+      z-index: 2;
+    }
+
+    .image-grid-overlay h3 {
+      position: absolute;
+      bottom: 30px;
+      color: #f5f5f5;
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .image-grid-card:hover h3 {
+      margin-top: 12px;
+      padding: 10px 20px;
+      border: 2px solid #A52A2A;
+      text-decoration: none;
+      display: inline-block;
+      transform: translateY(10px);
+      transition: opacity 0.3s ease, transform 0.3s ease, all 0.3s ease;
+      align-self: start;
+      cursor: pointer;
+      background-color: #f5f5f5;
+      color: #a52a2a;
+    }
+
+    .image-grid-overlay p {
+      font-size: 0.9rem;
+    }
+
+    .view-all-wrapper {
+      text-align: center;
+      margin-top: 40px;
+    }
+
+    .view-all-button {
+      padding: 12px 28px;
+      font-size: 16px;
+      font-weight: bold;
+      color: #a52a2a;
+      border: 2px solid #a52a2a;
+      background-color: #fff;
+      text-decoration: none;
+      border-radius: 6px;
+      transition: all 0.3s ease;
+    }
+
+    .view-all-button:hover {
+      background-color: #a52a2a;
+      color: #fff;
+    }
+
+    @media (max-width: 1024px) {
+      .image-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .image-grid-card:first-child,
+      .image-grid-card:nth-child(2) {
+        grid-column: span 1;
+        aspect-ratio: 3 / 2;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .image-grid {
+        grid-template-columns: 1fr;
+      gap: 15px;
+      padding: 0 15px;
+      width: 100%;
+      box-sizing: border-box;
+      margin: 0 auto;
+      max-width: 500px;
+      }
+
+      .image-grid-heading {
+        font-size: calc(var(--font-heading-scale)* 2.8rem);
+        padding: 0 15px;
+      }
+
+      .image-grid-card,
+      .image-grid-card:first-child,
+      .image-grid-card:nth-child(2) {
+        grid-column: span 1;
+        aspect-ratio: 3 / 2;
+      }
+
+      .image-grid-card:hover h3 {
+        font-size: 12px;
+        white-space: nowrap;
+      }
+    }
+  </style>
+{% endstylesheet %}
+
+<div class="image-grid-section page-width">
+  <h2 class="image-grid-heading">{{ section.settings.overlay_heading }}</h2>
+
+  <div class="image-grid">
+    {% for block in section.blocks %}
+      {% if block.settings.image %}
+        {% assign card_class = '' %}
+        {% if forloop.index == 1 %}
+          {% assign card_class = 'span-2' %}
+        {% endif %}
+
+        <a href="{{ block.settings.link }}" class="image-grid-card {{ card_class }}">
+          <img src="{{ block.settings.image | image_url: width: 1000 }}" alt="{{ block.settings.title }}">
+          <div class="image-grid-overlay">
+            <h3>
+              {{ block.settings.title }}
+              <span class="svg-wrapper"
+                ><span class="icon-wrap">&nbsp;{{ 'icon-arrow.svg' | inline_asset_content }}</span></span
+              >
+            </h3>
+            <p>{{ block.settings.description }}</p>
+            <!--
+              <div class="">
+                <span class="cta-button" role="button" aria-label="Explore {{ block.settings.title }} collection"
+                  >Explore {{ block.settings.title -}}
+                </span>
+              </div>
+            -->
+          </div>
+        </a>
+      {% endif %}
+    {% endfor %}
+  </div>
+  <div class="view-all-wrapper">
+    <a href="/collections" class="button button--secondary">View All</a>
+  </div>
+</div>

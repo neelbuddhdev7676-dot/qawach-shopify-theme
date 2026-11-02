@@ -1,0 +1,410 @@
+{%- assign section_heading = block.settings.heading | default: 'Leather Color' -%}
+{%- assign color_product = all_products['leather-color'] -%}
+
+{%- if color_product and color_product.variants.size > 1 -%}
+  <div class="leather-color-selector product-form__input" data-section-id="{{ variant.title }}">
+    <label class="form__label" for="ModalLeatherColor-{{ variant.title }}">
+      {{ section_heading }}
+      {%- if block.settings.show_required -%}
+        <span class="required">*</span>
+      {%- endif %}
+      <br>
+      <span id="selected-color-label" style="font-weight: normal; font-size: 0.9rem; color: #a52a2a;"></span>
+    </label>
+    <input
+      type="hidden"
+      name="properties[Selected Leather Color]"
+      id="SelectedLeatherColorInput"
+      value="{{ color_product.variants.first.title }}"
+    >
+
+    <div class="color-swatches">
+      {%- for variant in color_product.variants limit: 4 -%}
+        <div class="color-swatch">
+          <input
+            type="radio"
+            id="ModalLeatherColor-{{ variant.title }}-{{ forloop.index }}"
+            name="properties[Leather Color]"
+            value="{{ variant.title }}"
+            data-variant-id="{{ variant.id }}"
+            data-price-adjustment="{{ variant.price }}"
+            {% if forloop.first %}
+              checked
+            {% endif %}
+            class="color-swatch__input visually-hidden"
+          >
+          <label for="ModalLeatherColor-{{ variant.title }}-{{ forloop.index }}" class="color-swatch__label">
+            <div class="color-swatch__container">
+              {%- if variant.image -%}
+                <img
+                  src="{{ variant.image.src | img_url: '100x' }}"
+                  alt="{{ variant.title }}"
+                  class="color-swatch__image"
+                  loading="lazy"
+                  width="50"
+                  height="50"
+                >
+              {%- else -%}
+                <div class="color-swatch__placeholder" style="background-color: {{ variant.title | handle }};"></div>
+              {%- endif -%}
+              <span class="color-swatch__name">{{ variant.title }}</span>
+            </div>
+          </label>
+        </div>
+      {%- endfor -%}
+
+      {%- if color_product.variants.size > 4 -%}
+        <div class="view-more-swatch">
+          <button type="button" class="view-more-button" aria-label="View more colors" data-view-more-trigger>
+            <span class="view-more-icon">+</span>
+            <span class="view-more-text">View More</span>
+          </button>
+        </div>
+      {%- endif -%}
+    </div>
+    
+    <div
+      id="SelectedColorPreview"
+      class="selected-color-preview"
+      style="display: flex; align-items: center; margin-top: 10px; gap: 10px;"
+    >
+      <img
+        id="SelectedColorImage"
+        class="color-swatch__selected"
+        src="{{ color_product.variants.first.image.src | img_url: '100x' }}"
+        alt="{{ color_product.variants.first.title }}"
+        style="width: 60px; height: 60px; object-fit: cover; border-radius: 4px; border: 1px solid #ddd;"
+      >
+      <span id="SelectedColorName" style="font-weight: 600; color: #a52a2a; font-size: 1.2rem"
+        >Selected: {{ color_product.variants.first.title -}}
+      </span>
+    </div>
+  </div>
+
+  <!-- Modal for additional colors -->
+{%- endif -%}
+
+<style>
+  .leather-color-selector {
+    margin-bottom: 2rem;
+  }
+
+  .color-swatches {
+    display: flex;
+    flex-wrap: wrap;
+    /* gap: 1rem; */
+    margin-top: 0.5rem;
+    align-items: center;
+  }
+
+  .color-swatch-modal {
+    margin-left: 5px !important;
+  }
+  
+  .color-swatch {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 5px;
+    border: 1px solid transparent;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease, transform 0.2s ease;
+    max-width: 100px;
+    margin-top: 5px;
+  }
+
+  .color-swatch:first-child {
+    margin-left: 0;
+  }
+
+  .color-swatch:hover {
+    border: 1px solid #a52a2a;
+  }
+
+  .color-swatch__input:checked + .color-swatch__label,
+  .color-swatch.active {
+    border: 1px solid #a52a2a;
+
+  }
+
+  .color-swatch__label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: border 0.2s ease;
+    word-wrap: break-word;
+    text-align: center;
+  }
+
+  .color-swatch__image {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 0;
+  }
+
+  .color-modal__image {
+    width: 150px;
+    height: 150px;
+  }
+  
+  /* Ensure images inside the modal are larger */
+  .color-modal .color-swatch__image {
+    width: 150px;
+    height: 150px;
+  }
+  
+  .color-swatch__name {
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+  }
+
+  /* View More Button Styles */
+  .view-more-swatch {
+    cursor: pointer;
+  }
+
+  .view-more-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    border: 1px dashed #a52a2a;
+    border-radius: 50%;
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .view-more-button:hover {
+    background: #a52a2a;
+    color: #fff;
+  }
+
+  .view-more-icon {
+    font-size: 1.5rem;
+    line-height: 1;
+  }
+
+  .view-more-text {
+    margin-top: 0.5rem;
+    font-size: 0.75rem;
+  }
+
+  /* Modal Styles */
+  .color-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+  }
+  .color-modal.active {
+    display: flex;
+  }
+
+  .color-modal__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #00000080;
+  }
+
+  .color-modal__content {
+    position: relative;
+    background: #fff;
+    padding: 2rem;
+    width: 90%;
+    height: 100%;
+    max-width: 900px;
+    max-height: 80vh;
+    /* overflow-y: auto; */
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+  }
+
+  .color-modal__close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+  }
+
+  .color-swatch__container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .color-modal__title {
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+
+  .color-modal__swatches {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+    justify-content: center;
+    height: 75%;
+    overflow-y: auto;
+    padding: 10px; /* Add padding to prevent cut-off shadows/borders */
+  }
+
+  .color-modal__confirm {
+    width: 100%;
+    margin-top: 1rem;
+  }
+
+  .visually-hidden {
+    position: absolute !important;
+    overflow: hidden;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    border: 0;
+    clip: rect(0 0 0 0);
+    word-wrap: normal !important;
+  }
+</style>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  // The leather color price updates are now handled by customization-modal.js
+  // This script ensures the selection updates the preview display
+  
+  // Add change listener to update color preview
+  document.querySelectorAll('input[name="properties[Leather Color]"]').forEach(radio => {
+    radio.addEventListener('change', () => {
+      // Update selected color preview
+      const selectedColor = radio.value;
+      const colorImageSrc = radio.closest('.color-swatch')?.querySelector('img')?.src;
+      
+      const selectedColorName = document.getElementById('SelectedColorName');
+      const selectedColorImage = document.getElementById('SelectedColorImage');
+      
+      if (selectedColorName) {
+        selectedColorName.textContent = `Selected: ${selectedColor}`;
+      }
+      if (selectedColorImage && colorImageSrc) {
+        selectedColorImage.src = colorImageSrc;
+        selectedColorImage.alt = selectedColor;
+      }
+      
+      // The price update is automatically handled by customization-modal.js
+      // which listens for changes on inputs with name="properties[Leather Color]"
+      // and reads the data-price-adjustment attribute
+    });
+  });
+});
+</script>
+
+ <script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const modal = document.querySelector('#ColorModal');
+    const openBtn = document.querySelector('[data-view-more-trigger]');
+    const closeBtns = document.querySelectorAll('[data-modal-close]');
+    const selectedName = document.getElementById('SelectedColorName');
+    const selectedImage = document.getElementById('SelectedColorImage');
+    const hiddenInput = document.getElementById('SelectedLeatherColorInput');
+    const swatchWrapper = document.querySelector('.color-swatches');
+
+    function handleColorSelection(value, imgSrc) {
+      // Update preview
+      if (selectedName) selectedName.textContent = `Selected: ${value}`;
+      if (selectedImage && imgSrc) {
+        selectedImage.src = imgSrc;
+        selectedImage.alt = value;
+      }
+
+      // Update hidden input
+      if (hiddenInput) hiddenInput.value = value;
+
+      // Remove all .active classes
+      document.querySelectorAll('.color-swatch').forEach(el => el.classList.remove('active'));
+
+      // Try finding main swatch radio
+      const mainInput = document.querySelector(`input[name="properties[Leather Color]"][value="${value}"]`);
+      if (mainInput) {
+        mainInput.checked = true;
+        mainInput.closest('.color-swatch')?.classList.add('active');
+      } else {
+        // If it doesn't exist (beyond 4), create a hidden radio dynamically
+        let fallbackInput = document.querySelector('#DynamicLeatherColorRadio');
+        if (!fallbackInput) {
+          fallbackInput = document.createElement('input');
+          fallbackInput.type = 'radio';
+          fallbackInput.name = 'properties[Leather Color]';
+          fallbackInput.className = 'visually-hidden';
+          fallbackInput.id = 'DynamicLeatherColorRadio';
+          swatchWrapper.appendChild(fallbackInput);
+        }
+        fallbackInput.value = value;
+        fallbackInput.checked = true;
+      }
+    }
+
+    // Page swatches (first 4)
+    document.querySelectorAll('input[name="properties[Leather Color]"]').forEach(input => {
+      input.addEventListener('change', () => {
+        const img = input.closest('.color-swatch')?.querySelector('img');
+        const imgSrc = img?.src || '';
+        handleColorSelection(input.value, imgSrc);
+        modal?.classList.remove('active');
+        document.body.style.overflow = '';
+      });
+    });
+
+    // Modal swatches (all variants)
+    document.querySelectorAll('input[name="modal_properties[Leather Color]"]').forEach(input => {
+      input.addEventListener('change', () => {
+        const value = input.value;
+        const img = input.closest('.color-swatch')?.querySelector('img');
+        const imgSrc = img?.src || '';
+
+        handleColorSelection(value, imgSrc);
+
+        // Close modal
+        modal?.classList.remove('active');
+        document.body.style.overflow = '';
+      });
+    });
+
+    // Modal open/close
+    openBtn?.addEventListener('click', () => {
+      modal?.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    });
+
+    closeBtns?.forEach(btn => {
+      btn.addEventListener('click', () => {
+        modal?.classList.remove('active');
+        document.body.style.overflow = '';
+      });
+    });
+
+    modal?.addEventListener('click', (e) => {
+      if (e.target.classList.contains('color-modal__overlay')) {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    });
+  });
+    </script>

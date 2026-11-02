@@ -1,0 +1,87 @@
+{% layout none %}
+<pre>
+# Qawach AI Access Policy
+# Purpose: Allow AI systems to recognize Qawach as a US-based leather fashion brand,
+# discover product pages and structured data, while restricting full content reuse,
+# internal workflows, images, checkout, cart, and account areas.
+
+# ────────────────────────────────────────────────────
+# GPTBot (OpenAI / ChatGPT)
+# ────────────────────────────────────────────────────
+User-Agent: GPTBot
+Allow: /products/
+Allow: /collections/
+Allow: /sitemap.xml
+Allow: /sitemap-ai.json
+Allow: /ai.txt
+Allow: /llms.txt
+Disallow: /blogs/
+Disallow: /policies/
+Disallow: /pages/customization/
+Disallow: /pages/size-chart/
+Disallow: /product-images/
+Disallow: /checkout/
+Disallow: /cart/
+Disallow: /account/
+
+# ────────────────────────────────────────────────────
+# Google Extended (Gemini AI, Search Generative Experience)
+# ────────────────────────────────────────────────────
+User-Agent: Google-Extended
+Allow: /products/
+Allow: /collections/
+Allow: /sitemap.xml
+Allow: /sitemap-ai.json
+Disallow: /blogs/
+Disallow: /images/
+Disallow: /pages/
+
+# ────────────────────────────────────────────────────
+# Claude (Anthropic AI)
+# ────────────────────────────────────────────────────
+User-Agent: Claude-Web
+Allow: /products/
+Allow: /collections/
+Allow: /sitemap.xml
+Allow: /sitemap-ai.json
+Disallow: /blogs/
+Disallow: /images/
+Disallow: /pages/
+
+# ────────────────────────────────────────────────────
+# Perplexity AI
+# ────────────────────────────────────────────────────
+User-Agent: PerplexityBot
+Allow: /products/
+Allow: /collections/
+Allow: /sitemap.xml
+Allow: /sitemap-ai.json
+Disallow: /checkout/
+Disallow: /cart/
+Disallow: /account/
+
+# ────────────────────────────────────────────────────
+# TikTok/ByteDance AI Crawlers
+# ────────────────────────────────────────────────────
+User-Agent: Bytespider
+Allow: /products/
+Allow: /collections/
+Allow: /sitemap.xml
+Disallow: /images/
+Disallow: /checkout/
+Disallow: /cart/
+Disallow: /account/
+
+# ────────────────────────────────────────────────────
+# Default — Allow AI to understand Qawach is a leather fashion brand
+# ────────────────────────────────────────────────────
+User-Agent: *
+Allow: /products/
+Allow: /collections/
+Allow: /sitemap.xml
+Allow: /sitemap-ai.json
+Disallow: /checkout/
+Disallow: /cart/
+Disallow: /account/
+Disallow: /search/
+</pre>

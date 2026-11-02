@@ -1,0 +1,98 @@
+{%- liquid
+  assign sid = section.id
+-%}
+<div class="qsg" id="qsg-{{ sid }}">
+  {%- if section.settings.heading != blank -%}
+    <h2 class="qsg__heading">{{ section.settings.heading }}</h2>
+  {%- endif -%}
+  <div class="qsg__grid">
+    {%- for block in section.blocks -%}
+      {%- liquid
+        assign tag = 'div'
+        if block.settings.link != blank
+          assign tag = 'a'
+        endif
+        case block.settings.size
+          when 'full'
+            assign sizes = '(min-width: 1500px) 1470px, 100vw'
+          when 'half', 'big'
+            assign sizes = '(min-width: 750px) 50vw, 100vw'
+          else
+            assign sizes = '(min-width: 750px) 25vw, 50vw'
+        endcase
+        assign loading = 'lazy'
+        if section.index == 1 and forloop.index < 3
+          assign loading = 'eager'
+        endif
+        assign alt = block.settings.alt | default: block.settings.image.alt
+      -%}
+      <{{ tag }} class="qsg__tile qsg__tile--{{ block.settings.size }}{% if block.settings.contain %} qsg__tile--contain{% endif %}"{% if tag == 'a' %} href="{{ block.settings.link }}"{% endif %} {{ block.shopify_attributes }}>
+        {%- if block.settings.image != blank -%}
+          {{ block.settings.image | image_url: width: 3000 | image_tag: loading: loading, sizes: sizes, widths: '375, 550, 750, 1100, 1500, 2200, 3000', alt: alt }}
+        {%- else -%}
+          {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+        {%- endif -%}
+        {%- if block.settings.caption != blank -%}
+          <span class="qsg__caption">{{ block.settings.caption }}</span>
+        {%- endif -%}
+      </{{ tag }}>
+    {%- endfor -%}
+  </div>
+</div>
+
+{%- style -%}
+  #qsg-{{ sid }}{max-width:1500px;margin:0 auto;padding:{{ section.settings.padding_top }}px 15px {{ section.settings.padding_bottom }}px}
+  #qsg-{{ sid }} .qsg__heading{margin:0 0 12px;font-size:2rem;text-transform:uppercase;letter-spacing:.06em}
+  #qsg-{{ sid }} .qsg__grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:15px}
+  #qsg-{{ sid }} .qsg__tile{position:relative;display:block;overflow:hidden;background:#fff;color:inherit;text-decoration:none}
+  #qsg-{{ sid }} .qsg__tile img,#qsg-{{ sid }} .qsg__tile svg{display:block;width:100%;height:auto}
+  #qsg-{{ sid }} a.qsg__tile img{transition:transform .5s ease}
+  #qsg-{{ sid }} a.qsg__tile:hover img{transform:scale(1.03)}
+  #qsg-{{ sid }} .qsg__tile--full{grid-column:span 4}
+  #qsg-{{ sid }} .qsg__tile--half{grid-column:span 2}
+  #qsg-{{ sid }} .qsg__tile--quarter{grid-column:span 1;aspect-ratio:1/1}
+  #qsg-{{ sid }} .qsg__tile--big{grid-column:span 2;grid-row:span 2;aspect-ratio:1/1}
+  #qsg-{{ sid }} .qsg__tile--quarter img,#qsg-{{ sid }} .qsg__tile--big img{height:100%;object-fit:cover}
+  #qsg-{{ sid }} .qsg__tile--contain{border:1px solid #ececec}
+  #qsg-{{ sid }} .qsg__tile--contain img{object-fit:contain;padding:14px}
+  #qsg-{{ sid }} .qsg__caption{position:absolute;left:12px;bottom:12px;background:rgba(255,255,255,.92);color:#111;font-size:1.3rem;font-weight:600;padding:6px 12px;border-radius:999px}
+  @media screen and (max-width:749px){
+    #qsg-{{ sid }}{padding-left:8px;padding-right:8px}
+    #qsg-{{ sid }} .qsg__grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+    #qsg-{{ sid }} .qsg__tile--full,#qsg-{{ sid }} .qsg__tile--half,#qsg-{{ sid }} .qsg__tile--big{grid-column:span 2}
+    #qsg-{{ sid }} .qsg__tile--big{grid-row:span 1}
+  }
+{%- endstyle -%}
+
+{% schema %}
+{
+  "name": "Qawach store grid",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading" },
+    { "type": "range", "id": "padding_top", "min": 0, "max": 60, "step": 5, "unit": "px", "label": "Top padding", "default": 15 },
+    { "type": "range", "id": "padding_bottom", "min": 0, "max": 60, "step": 5, "unit": "px", "label": "Bottom padding", "default": 0 }
+  ],
+  "blocks": [
+    {
+      "type": "tile",
+      "name": "Tile",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "url", "id": "link", "label": "Link" },
+        { "type": "select", "id": "size", "label": "Tile size", "default": "quarter", "options": [
+          { "value": "full", "label": "Full width" },
+          { "value": "half", "label": "Half width" },
+          { "value": "big", "label": "Big square (2x2)" },
+          { "value": "quarter", "label": "Small square" }
+        ] },
+        { "type": "checkbox", "id": "contain", "label": "Show whole image (product photos)", "default": false },
+        { "type": "text", "id": "caption", "label": "Caption" },
+        { "type": "text", "id": "alt", "label": "Image alt text" }
+      ]
+    }
+  ],
+  "presets": [ { "name": "Qawach store grid" } ]
+}
+{% endschema %}

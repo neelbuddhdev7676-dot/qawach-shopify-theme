@@ -1,0 +1,80 @@
+{%- comment -%}
+  Qawach Halloween bats: on every page load, a swarm of bats flies all around the screen for about 2 seconds, then disappears.
+  Never blocks clicks. Skipped for visitors who prefer reduced motion.
+  Part of the Winter Arc skin (rendered from snippets/qawach-winter-arc.liquid).
+{%- endcomment -%}
+<style>
+  #qawach-bats{position:fixed;inset:0;pointer-events:none;z-index:2147483000;overflow:hidden}
+  #qawach-bats .qb{position:absolute;left:0;top:0;will-change:transform,opacity;filter:drop-shadow(0 0 1px #000) drop-shadow(0 0 5px rgba(227,154,59,.9))}
+  #qawach-bats .qb svg{display:block;width:100%;height:auto;overflow:visible}
+  #qawach-bats .qb .w{transform-origin:50px 24px;animation:qbFlap .13s ease-in-out infinite alternate}
+  @keyframes qbFlap{from{transform:scaleY(1)}to{transform:scaleY(.15)}}
+</style>
+<script>
+  (function () {
+    function run() {
+    try {
+      if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      if (!document.body || !document.body.animate) return;
+
+      var BAT = '<svg viewBox="0 0 100 50" aria-hidden="true" focusable="false">' +
+        '<g class="w" fill="#0a0809">' +
+        '<path d="M50 23 C43 11 29 6 4 9 C12 13 15 19 13 26 C19 22 25 23 27 30 C31 24 39 24 43 31 C45 28 47 26 50 26 Z"/>' +
+        '<path d="M50 23 C57 11 71 6 96 9 C88 13 85 19 87 26 C81 22 75 23 73 30 C69 24 61 24 57 31 C55 28 53 26 50 26 Z"/>' +
+        '</g>' +
+        '<g fill="#0a0809"><ellipse cx="50" cy="27" rx="4.6" ry="8.5"/>' +
+        '<path d="M46.5 20 L46 13.5 L49 18.5 Z M53.5 20 L54 13.5 L51 18.5 Z"/></g></svg>';
+
+      var layer = document.createElement('div');
+      layer.id = 'qawach-bats';
+      layer.setAttribute('aria-hidden', 'true');
+      document.body.appendChild(layer);
+
+      var vw = window.innerWidth, vh = window.innerHeight;
+      var mobile = vw < 750;
+      var count = mobile ? 18 : 32;
+      var diag = Math.sqrt(vw * vw + vh * vh);
+      var longest = 0;
+      function rnd(a, b) { return a + Math.random() * (b - a); }
+
+      for (var i = 0; i < count; i++) {
+        var el = document.createElement('div');
+        el.className = 'qb';
+        el.style.width = Math.round(rnd(mobile ? 28 : 36, mobile ? 58 : 88)) + 'px';
+        el.innerHTML = BAT;
+        el.querySelector('.w').style.animationDuration = rnd(0.1, 0.16).toFixed(2) + 's';
+        layer.appendChild(el);
+
+        var x0 = rnd(-0.05, 1.05) * vw, y0 = rnd(-0.05, 1.05) * vh;
+        var ang = rnd(0, Math.PI * 2), dist = diag * rnd(0.55, 0.95);
+        var dx = Math.cos(ang) * dist, dy = Math.sin(ang) * dist;
+        var nx = -Math.sin(ang), ny = Math.cos(ang);
+        var amp = rnd(20, 60), waves = rnd(2, 4), phase = rnd(0, 6.28);
+        var frames = [], steps = 12;
+        for (var s = 0; s <= steps; s++) {
+          var t = s / steps;
+          var wob = Math.sin(phase + t * Math.PI * waves) * amp;
+          var x = x0 + dx * t + nx * wob, y = y0 + dy * t + ny * wob;
+          var tilt = Math.cos(phase + t * Math.PI * waves) * 15;
+          var sc = (t < 0.15 ? 0.3 + t / 0.15 * 0.7 : 1) * (0.9 + 0.2 * Math.sin(t * Math.PI));
+          var op = t < 0.1 ? t / 0.1 : (t > 0.8 ? (1 - t) / 0.2 : 1);
+          frames.push({
+            transform: 'translate(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px) rotate(' + tilt.toFixed(1) + 'deg) scale(' + sc.toFixed(2) + ')',
+            opacity: op.toFixed(2)
+          });
+        }
+        var dur = rnd(1500, 2000), delay = rnd(0, 250);
+        longest = Math.max(longest, dur + delay);
+        el.animate(frames, { duration: dur, delay: delay, easing: 'linear', fill: 'both' });
+      }
+      setTimeout(function () { if (layer.parentNode) layer.parentNode.removeChild(layer); }, longest + 100);
+    } catch (e) {}
+    }
+    // start once the page is on screen, so visitors actually see the swarm
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', function () { setTimeout(run, 150); });
+    } else {
+      setTimeout(run, 150);
+    }
+  })();
+</script>

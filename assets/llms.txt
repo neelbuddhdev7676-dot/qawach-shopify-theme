@@ -1,0 +1,49 @@
+# Allow AI to know we exist as a brand and sell products
+User-Agent: PerplexityBot
+Allow: /products/
+Allow: /collections/
+Allow: /sitemap.xml
+Disallow: /cart/
+Disallow: /account/
+
+User-Agent: GPTBot
+Allow: /products/
+Allow: /collections/
+Allow: /sitemap.xml
+Disallow: /product-images/
+Disallow: /blogs/
+Disallow: /policies/
+Disallow: /pages/size-chart/
+Disallow: /pages/customization/
+
+User-Agent: Google-Extended
+Allow: /products/
+Allow: /collections/
+Allow: /sitemap.xml
+Disallow: /product-images/
+Disallow: /blogs/
+Disallow: /pages/
+
+User-Agent: Claude-Web
+Allow: /products/
+Allow: /collections/
+Allow: /sitemap.xml
+Disallow: /images/
+Disallow: /blogs/
+Disallow: /pages/
+
+User-Agent: Bytespider   # TikTok AI
+Allow: /products/
+Allow: /collections/
+Disallow: /images/
+Disallow: /cart/
+Disallow: /account/
+
+# Default rule: allow AI to know Qawach sells products
+User-Agent: *
+Allow: /products/
+Allow: /collections/
+Allow: /sitemap.xml
+Disallow: /cart/
+Disallow: /search/
+Disallow: /checkout/

@@ -1,0 +1,18 @@
+{%- comment -%}
+  Renders an image for the Atelier homepage: the chosen image (img), else the fallback image
+  (a product or collection photo, blended onto the page). Renders nothing if neither exists.
+{%- endcomment -%}
+{%- liquid
+  assign qm_im = img
+  assign qm_mx = ''
+  if qm_im == blank and fallback != blank
+    assign qm_im = fallback
+    assign qm_mx = ' qm-mx'
+  endif
+  assign qm_cls = cls | append: qm_mx
+  assign qm_w = width | default: 1000
+  assign qm_alt = alt | default: ''
+  assign qm_load = loading | default: 'lazy'
+  assign qm_sizes = sizes | default: '100vw'
+-%}
+{%- if qm_im != blank -%}{%- if id != blank -%}{{ qm_im | image_url: width: qm_w | image_tag: class: qm_cls, alt: qm_alt, loading: qm_load, sizes: qm_sizes, id: id }}{%- else -%}{{ qm_im | image_url: width: qm_w | image_tag: class: qm_cls, alt: qm_alt, loading: qm_load, sizes: qm_sizes }}{%- endif -%}{%- endif -%}

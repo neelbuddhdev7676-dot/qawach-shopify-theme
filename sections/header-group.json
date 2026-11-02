@@ -1,0 +1,62 @@
+{
+  "name": "t:sections.header.name",
+  "type": "header",
+  "sections": {
+    "announcement-bar": {
+      "type": "announcement-bar",
+      "blocks": {
+        "announcement-amazon": {
+          "type": "announcement",
+          "settings": {
+            "text": "Handcrafted genuine leather jackets and pillow covers",
+            "link": "shopify://collections/pillow-cover"
+          }
+        }
+      },
+      "block_order": ["announcement-amazon"],
+      "settings": {
+        "auto_rotate": false,
+        "change_slides_speed": 5,
+        "color_scheme": "scheme-2",
+        "show_line_separator": true,
+        "show_social": false,
+        "enable_country_selector": false,
+        "enable_language_selector": false
+      }
+    },
+    "header": {
+      "type": "header",
+      "custom_css": [
+        ".gm-submenu p {display: none !important;}",
+        ".header__menu-item span {text-transform: uppercase; letter-spacing: 0.06em; font-size: 1.3rem;}",
+        ".header__inline-menu > .list-menu {justify-content: center; flex-wrap: nowrap;}"
+      ],
+      "settings": {
+        "logo_position": "top-center",
+        "mobile_logo_position": "center",
+        "menu": "amazon-store-menu",
+        "menu_type_desktop": "dropdown",
+        "sticky_header_type": "on-scroll-up",
+        "show_line_separator": true,
+        "color_scheme": "scheme-3",
+        "menu_color_scheme": "scheme-1",
+        "enable_country_selector": false,
+        "enable_language_selector": true,
+        "enable_customer_avatar": true,
+        "margin_bottom": 0,
+        "padding_top": 12,
+        "padding_bottom": 12
+      }
+    },
+    "atelier-type": {
+      "type": "custom-liquid",
+      "settings": {
+        "custom_liquid": "{% render 'qawach-atelier' %}",
+        "color_scheme": "scheme-1",
+        "padding_top": 0,
+        "padding_bottom": 0
+      }
+    }
+  },
+  "order": ["announcement-bar", "header", "atelier-type"]
+}

@@ -1,0 +1,362 @@
+{%- comment -%}
+  QAWACH "Winter Arc" seasonal skin (Halloween night look, kept for the whole winter).
+  Everything seasonal lives in this one snippet: dark palette, Winter Arc ticker, homepage hero, snowfall and bats.
+  To switch back to the normal look: delete the "Winter Arc" Custom Liquid section from the header in the theme editor.
+{%- endcomment -%}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@1,400;1,500&display=swap" rel="stylesheet">
+<style>
+  /* ---------- Night palette (overrides the theme colour schemes) ---------- */
+  :root, .color-scheme-1, .color-scheme-5 {
+    --color-background: 14,12,17; --gradient-background: #0e0c11;
+    --color-foreground: 237,230,218; --color-background-contrast: 70,62,78;
+    --color-shadow: 0,0,0;
+    --color-button: 227,154,59; --color-button-text: 18,14,10;
+    --color-secondary-button: 14,12,17; --color-secondary-button-text: 227,154,59;
+    --color-link: 227,154,59;
+    --color-badge-foreground: 237,230,218; --color-badge-background: 14,12,17; --color-badge-border: 227,154,59;
+    --payment-terms-background-color: rgb(14,12,17);
+  }
+  .color-scheme-5 { --color-background: 0,0,0; --gradient-background: rgba(0,0,0,0); --color-button-text: 18,14,10; }
+  .color-scheme-2 {
+    --color-background: 176,72,18; --gradient-background: linear-gradient(90deg,#7a2a0c 0%,#b04812 50%,#7a2a0c 100%);
+    --color-foreground: 255,246,232; --color-button: 18,14,10; --color-button-text: 255,246,232;
+    --color-secondary-button-text: 255,246,232; --color-link: 255,246,232;
+  }
+  .color-scheme-3, .color-scheme-4 {
+    --color-background: 9,8,11; --gradient-background: #09080b;
+    --color-foreground: 237,230,218; --color-background-contrast: 70,62,78;
+    --color-button: 227,154,59; --color-button-text: 18,14,10;
+    --color-secondary-button: 9,8,11; --color-secondary-button-text: 227,154,59; --color-link: 227,154,59;
+    --color-badge-foreground: 237,230,218; --color-badge-background: 9,8,11; --color-badge-border: 227,154,59;
+  }
+  body { background-color: #0e0c11; }
+  ::selection { background: #e39a3b; color: #120e0a; }
+
+  /* custom Qawach sections that had light colours hard-coded */
+  .qsg__tile:not(.qsg__tile--quarter) { background: #16131a !important; }
+  .qsg__tile--contain { border-color: #2c2632 !important; }
+  .qab__inner { background: linear-gradient(135deg,#1a1520,#0e0c11) !important; border: 1px solid rgba(227,154,59,.35); }
+  .qab__btn { background: #e39a3b !important; }
+  #qawach-size-dialog { background: #15121a; color: #ede6da; }
+  #qawach-size-dialog table { color: #ede6da; }
+  #qawach-size-dialog button { color: #ede6da; }
+  #qawach-size-dialog table td, .rte table td { background: transparent !important; color: #ede6da !important; border-color: #2c2632 !important; }
+  #qawach-size-dialog table tr:nth-child(even) td, .rte table tr:nth-child(even) td { background: rgba(255,255,255,.06) !important; }
+  /* the Winter Arc hero replaces the old "Timeless Elegance" banner (same photo) on the homepage */
+  a.qsg__tile--full[href$="/collections/leather-jacket-for-men"] { display: none !important; }
+
+
+  /* ---------- Homepage: old top tiles (workshop banner, old hero, white collection tiles) replaced by the Winter Arc hero + cards ---------- */
+  .template-index div[id$="__store_top"], div[id^="qsg-"][id$="__store_top"] { display: none !important; }
+
+  /* ---------- Collection cards ---------- */
+  .qwa-cols { max-width: 1500px; margin: 0 auto; padding: 56px 15px 24px; }
+  .qwa-cols__head { text-align: center; margin-bottom: 28px; }
+  .qwa-cols__head .qwa-hero__eyebrow { justify-content: center; margin-bottom: 10px; }
+  .qwa-cols__title { margin: 0; font-family: Cinzel, serif; font-weight: 700; font-size: clamp(28px, 3vw, 44px); color: #f3e7d3; letter-spacing: .02em; }
+  .qwa-cols__grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 16px; }
+  .qwa-col { display: flex; flex-direction: column; background: #16131a; border: 1px solid #2c2632; border-radius: 14px; overflow: hidden; text-decoration: none; color: #ede6da;
+    transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease; }
+  .qwa-col:hover { transform: translateY(-5px); border-color: rgba(227,154,59,.7); box-shadow: 0 18px 40px rgba(0,0,0,.55), 0 0 24px rgba(227,154,59,.12); }
+  .qwa-col__media { aspect-ratio: 4 / 5; background: radial-gradient(120% 90% at 50% 28%, #f8f1e6 0%, #e6dac7 100%); display: block !important; overflow: hidden; }
+  .qwa-col__media img { width: 100%; height: 100%; object-fit: contain; mix-blend-mode: multiply; padding: 10px; transition: transform .4s ease; }
+  .qwa-col:hover .qwa-col__media img { transform: scale(1.04); }
+  .qwa-col__body { padding: 14px 14px 16px; display: flex; flex-direction: column; gap: 4px; border-top: 1px solid rgba(227,154,59,.25); }
+  .qwa-col__count { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: #a89f92; }
+  .qwa-col__name { margin: 0; font-family: Cinzel, serif; font-weight: 700; font-size: 18px; color: #f3e7d3; }
+  .qwa-col__cta { font-size: 14px; font-weight: 700; color: #e39a3b; }
+
+  /* ---------- Product cards (all product grids & sliders) ---------- */
+  .card-wrapper .card--standard { background: #16131a; border: 1px solid #2c2632; border-radius: 14px; overflow: hidden;
+    transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease; }
+  .card-wrapper:hover .card--standard { transform: translateY(-4px); border-color: rgba(227,154,59,.65); box-shadow: 0 18px 40px rgba(0,0,0,.55); }
+  .card-wrapper .card--standard > .card__inner { background: radial-gradient(120% 90% at 50% 28%, #f8f1e6 0%, #e6dac7 100%) !important; border-radius: 0 !important; }
+  .card-wrapper .card--standard > .card__inner::after { display: none; }
+  .card-wrapper .card__media .media { background: transparent !important; }
+  .card-wrapper .card__media img { mix-blend-mode: multiply; }
+  .card-wrapper .card--standard > .card__content { padding: 12px 14px 16px; }
+  .card-wrapper .card__heading, .card-wrapper .card__heading a { color: #ede6da !important; font-weight: 600; }
+  .card-wrapper .price .price-item--sale, .card-wrapper .price .price-item--regular, .card-wrapper .price__regular .price-item { color: #e3b46b; font-weight: 700; }
+  .card-wrapper .price--on-sale .price__sale s .price-item--regular { color: #8d857a; font-weight: 400; }
+  .card-wrapper .badge { background: #b04812 !important; color: #fff6e8 !important; border-color: transparent !important; border-radius: 999px; }
+  .collection__title .title, .section-header .title, .title-wrapper-with-link .title { font-family: Cinzel, serif; color: #f3e7d3; letter-spacing: .02em; }
+
+  /* ---------- Homepage showcase tiles ---------- */
+  .qsg__tile { border-radius: 12px; border: 1px solid #2c2632; transition: border-color .25s ease, box-shadow .25s ease; }
+  a.qsg__tile:hover { border-color: rgba(227,154,59,.65); box-shadow: 0 14px 34px rgba(0,0,0,.5); }
+  .qsg__tile--quarter { background: radial-gradient(120% 90% at 50% 28%, #f8f1e6 0%, #e6dac7 100%) !important; }
+  .qsg__tile--quarter img { mix-blend-mode: multiply; }
+  .qsg__heading { font-family: Cinzel, serif; color: #f3e7d3; text-align: center; font-size: clamp(24px, 2.4vw, 34px) !important; margin-bottom: 18px !important; }
+
+  /* ---------- Hero with the new Winter Arc photo ---------- */
+  .qwa-hero__shade { display: none; }
+  .qwa-hero--photo .qwa-hero__moon { display: none !important; }
+  .qwa-hero--photo .qwa-hero__img { width: 100%; -webkit-mask-image: none; mask-image: none; }
+  .qwa-hero--photo .qwa-hero__img img { object-position: 70% 50%; transform: none; filter: none; }
+  .qwa-hero--photo .qwa-hero__shade { display: block !important; position: absolute; inset: 0; z-index: 1;
+    background: radial-gradient(80% 70% at 50% 50%, rgba(8,7,10,.35) 0%, rgba(8,7,10,.75) 100%); }
+
+
+  /* ---------- Luxury typographic hero (used until a Winter Arc photo is uploaded) ---------- */
+  .qwa-hero--lux, .qwa-hero--photo { min-height: 0; justify-content: center; text-align: center;
+    background: radial-gradient(70% 60% at 50% 16%, #2a2233 0%, #121016 55%, #08070a 100%); }
+  .qwa-lux__glow, .qwa-lux__moon, .qwa-lux__fog, .qwa-lux__grain { display: block !important; position: absolute; pointer-events: none; }
+  .qwa-lux__glow { left: 50%; top: -30%; width: 1100px; height: 1100px; transform: translateX(-50%); z-index: 0;
+    background: radial-gradient(circle, rgba(246,227,187,.20) 0%, rgba(246,227,187,.07) 26%, rgba(246,227,187,0) 58%); }
+  .qwa-lux__moon { left: 50%; top: 46px; width: 92px; height: 92px; margin-left: -46px; border-radius: 50%; z-index: 0; opacity: .95;
+    background: radial-gradient(circle at 32% 40%, rgba(150,125,90,.10) 0%, transparent 14%), radial-gradient(circle at 64% 60%, rgba(150,125,90,.09) 0%, transparent 18%),
+      radial-gradient(circle at 55% 28%, rgba(150,125,90,.07) 0%, transparent 9%),
+      radial-gradient(circle at 42% 38%, #fffbf2 0%, #f0e3c6 58%, #cdb382 100%);
+    box-shadow: 0 0 40px 8px rgba(250,232,190,.35), 0 0 140px 50px rgba(246,227,187,.14), inset -12px -9px 22px rgba(110,85,50,.28); }
+  .qwa-lux__fog { left: -50%; width: 200%; height: 55%; bottom: -8%; z-index: 1; filter: blur(14px);
+    background: radial-gradient(ellipse 30% 40% at 25% 60%, rgba(205,195,225,.10), transparent 70%), radial-gradient(ellipse 35% 45% at 70% 70%, rgba(205,195,225,.08), transparent 70%);
+    animation: qwaFog 46s ease-in-out infinite alternate; }
+  .qwa-lux__fog--2 { bottom: 4%; opacity: .7; animation-duration: 64s; animation-direction: alternate-reverse; }
+  @keyframes qwaFog { from { transform: translateX(-6%); } to { transform: translateX(6%); } }
+  .qwa-lux__grain { inset: 0; z-index: 1; opacity: .09; mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>"); }
+  .qwa-lux__body { position: relative; z-index: 3; width: 100%; max-width: 1100px; margin: 0 auto; padding: 168px 24px 96px; box-sizing: border-box; }
+  .qwa-lux__eyebrow { display: inline-flex; align-items: center; gap: 18px; margin: 0 0 22px; font-family: Cinzel, serif; font-weight: 400;
+    font-size: 13px; letter-spacing: .48em; text-transform: uppercase; color: #d9b77a; }
+  .qwa-lux__eyebrow span { display: block !important; width: 56px; height: 1px; background: linear-gradient(90deg, transparent, #d9b77a); }
+  .qwa-lux__eyebrow span:last-child { background: linear-gradient(90deg, #d9b77a, transparent); }
+  .qwa-lux__title { margin: 0; font-family: Cinzel, serif; font-weight: 400; font-size: clamp(54px, 9.4vw, 150px); line-height: .95; letter-spacing: .06em;
+    text-transform: uppercase; background: linear-gradient(180deg, #fbefd2 0%, #e7c381 48%, #b8873b 78%, #8f6428 100%); -webkit-background-clip: text; background-clip: text;
+    color: transparent; filter: drop-shadow(0 8px 34px rgba(0,0,0,.65)); }
+  .qwa-lux__the { display: block; font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 500; text-transform: none;
+    font-size: .34em; letter-spacing: .02em; line-height: 1; margin-bottom: .05em; }
+  .qwa-lux__lead { margin: 22px 0 36px; font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 27px; color: rgba(237,230,218,.86); }
+  .qwa-lux__ctas { display: flex; justify-content: center; flex-wrap: wrap; gap: 14px; }
+  .qwa-lux__btn { box-sizing: border-box; display: inline-flex; align-items: center; justify-content: center; min-width: 200px; min-height: 54px; padding: 0 34px;
+    border: 1px solid rgba(227,180,107,.85); color: #f3e2bf; background: rgba(10,8,12,.3); text-decoration: none;
+    font-size: 12px; font-weight: 600; letter-spacing: .3em; text-transform: uppercase; transition: background .3s ease, color .3s ease; }
+  .qwa-lux__btn:hover { background: #e3b46b; color: #120e0a; }
+  .qwa-hero__sale.qwa-lux__sale { margin: 26px 0 0; padding: 0; border: 0; background: none; border-radius: 0; font-size: 13px; letter-spacing: .08em; color: #c9a77a; }
+
+  /* ---------- Photo hero (Winter Arc banner image): text on the left, jacket on the right ---------- */
+  .qwa-hero.qwa-hero--photo { min-height: clamp(560px, 44vw, 780px); justify-content: flex-start; text-align: left; background: #08070a; }
+  .qwa-hero--photo .qwa-hero__img img { object-position: 78% 50%; }
+  .qwa-hero--photo .qwa-hero__shade { background: linear-gradient(90deg, rgba(8,7,10,.9) 0%, rgba(8,7,10,.62) 30%, rgba(8,7,10,.15) 52%, rgba(8,7,10,0) 62%),
+      linear-gradient(180deg, rgba(8,7,10,.35) 0%, rgba(8,7,10,0) 22%, rgba(8,7,10,0) 75%, rgba(8,7,10,.7) 100%); }
+  .qwa-hero--photo .qwa-lux__body { max-width: 1440px; padding: 96px 64px 96px; }
+  .qwa-hero--photo .qwa-lux__body > * { max-width: 600px; }
+  .qwa-hero--photo .qwa-lux__eyebrow span:first-child { display: none !important; }
+  .qwa-hero--photo .qwa-lux__title { font-size: clamp(48px, 6.6vw, 108px); }
+  .qwa-hero--photo .qwa-lux__ctas { justify-content: flex-start; }
+
+  /* ---------- Winter Arc ticker (every page) ---------- */
+  .qwa-tick { background: #09080b; border-bottom: 1px solid rgba(227,154,59,.35); overflow: hidden; white-space: nowrap; }
+  .qwa-tick__track { display: inline-flex; animation: qwaTick 38s linear infinite; }
+  .qwa-tick__item { display: inline-flex; align-items: center; gap: 14px; padding: 10px 22px; font-family: Cinzel, serif; font-weight: 600; font-size: 13px; letter-spacing: .24em; text-transform: uppercase; color: #e3b46b; }
+  .qwa-tick__item svg { width: 12px; height: 12px; flex: none; }
+  @keyframes qwaTick { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+  /* ---------- Homepage hero ---------- */
+  .qwa-hero { position: relative; overflow: hidden; min-height: 600px; display: flex; align-items: center;
+    background: radial-gradient(120% 90% at 35% 0%, #2b2140 0%, #15111d 45%, #0b090e 100%); color: #ede6da; }
+  .qwa-hero__img { position: absolute; top: 0; right: 0; width: 64%; height: 100%; overflow: hidden; z-index: 1;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, transparent 30%, #000 62%); mask-image: linear-gradient(90deg, transparent 0%, transparent 30%, #000 62%); }
+  .qwa-hero__img img { width: 100%; height: 100%; object-fit: cover; object-position: 88% 40%; transform: scale(1.12); filter: saturate(.85) brightness(.85); }
+  .qwa-hero__moon, .qwa-hero__ground { display: block !important; }
+  .qwa-hero__moon { position: absolute; z-index: 0; top: 56px; left: 44%; width: 130px; height: 130px; border-radius: 50%;
+    background: radial-gradient(circle at 38% 36%, #fffaf0 0%, #f6e3bb 55%, #e7c98f 100%);
+    box-shadow: 0 0 60px 18px rgba(246,227,187,.28), 0 0 160px 60px rgba(246,227,187,.12); }
+  .qwa-hero__bats { position: absolute; z-index: 2; top: 70px; left: 38%; width: 300px; height: 140px; pointer-events: none; }
+  .qwa-hero__bats svg { position: absolute; fill: #07060a; filter: drop-shadow(0 0 3px rgba(227,154,59,.6)); animation: qwaHover 3.2s ease-in-out infinite alternate; }
+  .qwa-hero__bats .w { transform-origin: 50px 24px; animation: qbFlap .22s ease-in-out infinite alternate; }
+  @keyframes qwaHover { from { transform: translateY(0); } to { transform: translateY(-12px); } }
+  .qwa-hero__ground { position: absolute; left: 0; right: 0; bottom: 0; height: 90px; z-index: 2;
+    background: linear-gradient(180deg, rgba(14,12,17,0) 0%, #0e0c11 100%); }
+  .qwa-hero__body { position: relative; z-index: 3; width: 100%; max-width: 1440px; margin: 0 auto; padding: 72px 48px; }
+  .qwa-hero__copy { max-width: 600px; }
+  .qwa-hero__eyebrow { display: inline-flex; align-items: center; gap: 10px; margin: 0 0 18px; font-family: Cinzel, serif; font-weight: 600;
+    font-size: 14px; letter-spacing: .3em; text-transform: uppercase; color: #e3b46b; }
+  .qwa-hero__eyebrow svg { width: 16px; height: 16px; }
+  .qwa-hero h1 { margin: 0 0 20px; font-family: Cinzel, serif; font-weight: 700; font-size: clamp(42px, 5.4vw, 80px); line-height: 1.02;
+    color: #f6efe2; letter-spacing: .01em; text-shadow: 0 4px 30px rgba(0,0,0,.6); }
+  .qwa-hero h1 span { color: #e39a3b; }
+  .qwa-hero__lead { margin: 0 0 30px; font-size: 18px; line-height: 1.6; color: rgba(237,230,218,.82); max-width: 500px; }
+  .qwa-hero__ctas { display: flex; flex-wrap: wrap; gap: 12px; }
+  .qwa-btn { display: inline-flex; align-items: center; justify-content: center; min-height: 50px; padding: 0 28px; font-size: 15px; font-weight: 700;
+    letter-spacing: .08em; text-transform: uppercase; text-decoration: none; border-radius: 2px; transition: transform .2s ease, background .2s ease; }
+  .qwa-btn:hover { transform: translateY(-2px); }
+  .qwa-btn--gold { background: #e39a3b; color: #120e0a; }
+  .qwa-btn--gold:hover { background: #efae55; }
+  .qwa-btn--line { border: 1px solid rgba(237,230,218,.7); color: #ede6da; }
+  .qwa-btn--line:hover { background: rgba(237,230,218,.08); }
+  .qwa-hero__sale { display: none; margin: 22px 0 0; padding: 8px 16px; border: 1px solid rgba(227,154,59,.6); border-radius: 999px;
+    font-size: 14px; color: #f3c789; background: rgba(176,72,18,.25); }
+  .qwa-hero__sale.is-on { display: inline-block; }
+
+  /* ---------- Snow + bats layers ---------- */
+  #qwa-snow { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 2147482000; }
+
+  @media screen and (max-width: 749px) {
+    .qwa-hero { min-height: 640px; align-items: flex-end; }
+    .qwa-hero__img { width: 100%; -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 40%, transparent 85%); mask-image: linear-gradient(180deg, #000 0%, #000 40%, transparent 85%); }
+    .qwa-hero__img img { object-position: 80% 30%; opacity: .75; }
+    .qwa-hero__moon { top: 26px; left: auto; right: 22px; width: 74px; height: 74px; z-index: 2; }
+    .qwa-hero__bats { top: 36px; left: auto; right: 70px; width: 210px; transform: scale(.7); transform-origin: right top; }
+    .qwa-hero__eyebrow { font-size: 11px; letter-spacing: .16em; }
+    .qwa-hero__sale { border-radius: 12px; }
+    .qwa-hero__body { padding: 230px 20px 40px; }
+    .qwa-hero__lead { font-size: 16px; }
+    .qwa-btn { flex: 1 1 100%; }
+    .qwa-tick__item { font-size: 11px; padding: 8px 16px; }
+    .qwa-cols { padding: 36px 10px 12px; }
+    .qwa-cols__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    .qwa-col__name { font-size: 15px; }
+    .qwa-hero--photo .qwa-hero__img img { object-position: 72% 50%; }
+    .qwa-hero--lux, .qwa-hero--photo { min-height: 0; align-items: center; }
+    .qwa-lux__glow { width: 700px; height: 700px; top: -18%; }
+    .qwa-lux__moon { width: 68px; height: 68px; margin-left: -34px; top: 34px; }
+    .qwa-lux__body { padding: 128px 18px 64px; }
+    .qwa-lux__eyebrow { font-size: 10px; letter-spacing: .32em; gap: 10px; }
+    .qwa-lux__eyebrow span { width: 28px; }
+    .qwa-lux__lead { font-size: 21px; margin: 16px 0 28px; }
+    .qwa-lux__ctas { flex-direction: column; align-items: center; }
+    .qwa-lux__btn { width: 100%; max-width: 300px; }
+    .qwa-hero.qwa-hero--photo { flex-direction: column; align-items: stretch; min-height: 0; text-align: center; }
+    .qwa-hero--photo .qwa-hero__img { position: relative; width: 100%; height: 300px; -webkit-mask-image: none; mask-image: none; }
+    .qwa-hero--photo .qwa-hero__img img { opacity: 1; object-position: 74% 50%; }
+    .qwa-hero--photo .qwa-hero__shade { top: 0; bottom: auto; height: 300px; background: linear-gradient(180deg, rgba(8,7,10,.25) 0%, rgba(8,7,10,0) 40%, rgba(8,7,10,.95) 100%); }
+    .qwa-hero--photo .qwa-lux__body { padding: 0 18px 56px; margin-top: -40px; }
+    .qwa-hero--photo .qwa-lux__body > * { max-width: none; }
+    .qwa-hero--photo .qwa-lux__eyebrow span:first-child { display: block !important; }
+    .qwa-hero--photo .qwa-lux__ctas { justify-content: center; }
+  }
+  @media screen and (min-width: 750px) and (max-width: 1100px) {
+    .qwa-cols__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .qwa-tick__track, .qwa-lux__fog { animation: none; }
+  }
+</style>
+
+{%- capture qwa_flake -%}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M12 2v20M3.3 7l17.4 10M3.3 17L20.7 7M9 4l3 2 3-2M9 20l3-2 3 2"/></svg>{%- endcapture -%}
+{%- capture qwa_bat -%}<g class="w"><path d="M50 23 C43 11 29 6 4 9 C12 13 15 19 13 26 C19 22 25 23 27 30 C31 24 39 24 43 31 C45 28 47 26 50 26 Z"/><path d="M50 23 C57 11 71 6 96 9 C88 13 85 19 87 26 C81 22 75 23 73 30 C69 24 61 24 57 31 C55 28 53 26 50 26 Z"/></g><ellipse cx="50" cy="27" rx="4.6" ry="8.5"/><path d="M46.5 20 L46 13.5 L49 18.5 Z M53.5 20 L54 13.5 L51 18.5 Z"/>{%- endcapture -%}
+
+<div class="qwa-tick" aria-label="The Winter Arc">
+  <div class="qwa-tick__track">
+    {%- for i in (1..2) -%}
+      <span class="qwa-tick__item">The Winter Arc {{ qwa_flake }}</span>
+      <span class="qwa-tick__item">Handcrafted genuine leather {{ qwa_flake }}</span>
+      <span class="qwa-tick__item">Built for cold nights {{ qwa_flake }}</span>
+      <span class="qwa-tick__item">Jackets · Coats · Vests {{ qwa_flake }}</span>
+      <span class="qwa-tick__item">The Winter Arc {{ qwa_flake }}</span>
+      <span class="qwa-tick__item">Handcrafted genuine leather {{ qwa_flake }}</span>
+      <span class="qwa-tick__item">Built for cold nights {{ qwa_flake }}</span>
+      <span class="qwa-tick__item">Jackets · Coats · Vests {{ qwa_flake }}</span>
+    {%- endfor -%}
+  </div>
+</div>
+
+{%- if template.name == 'index' -%}
+  {%- assign qwa_img = images['qawach-winter-arc-hero.jpg'] | default: images['qawach-winter-arc-hero.png'] | default: images['qawach-winter-arc-hero.webp'] -%}
+  {%- assign qwa_photo = true -%}
+  {%- if qwa_img == blank -%}
+    {%- assign qwa_photo = false -%}
+  {%- endif -%}
+  <section class="qwa-hero{% if qwa_photo %} qwa-hero--photo{% else %} qwa-hero--lux{% endif %}" aria-label="The Winter Arc">
+    {%- if qwa_photo -%}
+      <div class="qwa-hero__img" aria-hidden="true">
+        {{ qwa_img | image_url: width: 2200 | image_tag: loading: 'eager', fetchpriority: 'high', sizes: '100vw', widths: '750, 1100, 1500, 2200', alt: '' }}
+      </div>
+      <div class="qwa-hero__shade" aria-hidden="true"></div>
+    {%- else -%}
+      <div class="qwa-lux__glow" aria-hidden="true"></div>
+      <div class="qwa-lux__moon" aria-hidden="true"></div>
+      <div class="qwa-lux__fog qwa-lux__fog--1" aria-hidden="true"></div>
+      <div class="qwa-lux__fog qwa-lux__fog--2" aria-hidden="true"></div>
+      <div class="qwa-lux__grain" aria-hidden="true"></div>
+    {%- endif -%}
+    <div class="qwa-hero__ground" aria-hidden="true"></div>
+    <div class="qwa-lux__body">
+      <p class="qwa-lux__eyebrow"><span aria-hidden="true"></span>Qawach &middot; Season 2026<span aria-hidden="true"></span></p>
+      <h1 class="qwa-lux__title"><span class="qwa-lux__the">The</span>Winter Arc</h1>
+      <p class="qwa-lux__lead">Handcrafted leather, built for cold nights.</p>
+      <div class="qwa-lux__ctas">
+        <a class="qwa-lux__btn" href="/collections/leather-jacket-for-men">Shop Men</a>
+        <a class="qwa-lux__btn" href="/collections/leather-jacket-for-women">Shop Women</a>
+      </div>
+      <p class="qwa-hero__sale qwa-lux__sale" data-qwa-until="2026-11-02T05:00:00Z">Spooky Season Sale &middot; extra 10% off everything, applied at checkout &middot; ends Nov 1</p>
+    </div>
+  </section>
+
+  <section class="qwa-cols" aria-labelledby="qwa-cols-title">
+    <div class="qwa-cols__head">
+      <p class="qwa-hero__eyebrow">{{ qwa_flake }} Collections</p>
+      <h2 id="qwa-cols-title" class="qwa-cols__title">Gear up for your Winter Arc</h2>
+    </div>
+    <div class="qwa-cols__grid">
+      {%- assign qwa_handles = 'leather-jacket-for-men,leather-jacket-for-women,leather-coat,coat,leather-vest,pillow-cover' | split: ',' -%}
+      {%- assign qwa_labels = "Men's Jackets,Women's Jackets,Men's Coats,Women's Coats,Leather Vests,Pillow Covers" | split: ',' -%}
+      {%- for h in qwa_handles -%}
+        {%- assign c = collections[h] -%}
+        {%- if c and c.products_count > 0 -%}
+          {%- assign cimg = c.image | default: c.products.first.featured_image -%}
+          <a class="qwa-col" href="{{ c.url }}">
+            <div class="qwa-col__media">
+              {%- if cimg -%}{{ cimg | image_url: width: 700 | image_tag: loading: 'lazy', widths: '300, 450, 700', sizes: '(min-width: 990px) 16vw, 45vw', alt: c.title }}{%- endif -%}
+            </div>
+            <div class="qwa-col__body">
+              <span class="qwa-col__count">{{ c.products_count }} styles</span>
+              <h3 class="qwa-col__name">{{ qwa_labels[forloop.index0] }}</h3>
+              <span class="qwa-col__cta">Shop now <span aria-hidden="true">&rarr;</span></span>
+            </div>
+          </a>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </section>
+{%- endif -%}
+
+<script>
+  (function () {
+    var SALE_END = Date.parse('2026-11-02T05:00:00Z');
+    var now = Date.now();
+
+    // Sale line in the hero shows only while the Halloween discount is live
+    document.querySelectorAll('[data-qwa-until]').forEach(function (el) {
+      if (now < Date.parse(el.getAttribute('data-qwa-until'))) el.classList.add('is-on');
+    });
+
+    // After the sale ends, swap the announcement bar to the Winter Arc message (so it never advertises an expired discount)
+    if (now > SALE_END) {
+      document.querySelectorAll('.announcement-bar__message span').forEach(function (s) {
+        if (/spooky|10%/i.test(s.textContent)) s.textContent = 'The Winter Arc is here: handcrafted leather, built for cold nights';
+      });
+    }
+
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    // ---------- Light snowfall ----------
+    try {
+      var cv = document.createElement('canvas');
+      cv.id = 'qwa-snow'; cv.setAttribute('aria-hidden', 'true');
+      document.body.appendChild(cv);
+      var ctx = cv.getContext('2d'), dpr = Math.min(window.devicePixelRatio || 1, 2), W, H, flakes = [];
+      function size() { W = window.innerWidth; H = window.innerHeight; cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); }
+      size(); window.addEventListener('resize', size);
+      var n = W < 750 ? 34 : 70;
+      for (var i = 0; i < n; i++) flakes.push({ x: Math.random() * W, y: Math.random() * H, r: 0.8 + Math.random() * 2.2,
+        v: 0.35 + Math.random() * 0.9, s: Math.random() * 6.28, a: 0.35 + Math.random() * 0.5 });
+      function tick() {
+        if (!document.hidden) {
+          ctx.clearRect(0, 0, W, H);
+          for (var j = 0; j < flakes.length; j++) {
+            var f = flakes[j]; f.y += f.v; f.s += 0.01; f.x += Math.sin(f.s) * 0.35;
+            if (f.y > H + 5) { f.y = -5; f.x = Math.random() * W; }
+            ctx.beginPath(); ctx.arc(f.x, f.y, f.r, 0, 6.283); ctx.fillStyle = 'rgba(255,255,255,' + f.a + ')'; ctx.fill();
+          }
+        }
+        requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    } catch (e) {}
+  })();
+</script>
+
+{%- render 'qawach-bats' -%}

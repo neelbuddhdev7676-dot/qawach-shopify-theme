@@ -1,0 +1,396 @@
+{% schema %}
+{
+  "name": "Leather Color Selector",
+  "class": "section",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Leather Color"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_required",
+      "label": "Show required indicator",
+      "default": true
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Leather colors collection",
+      "info": "Select the collection containing your leather color products"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Leather Color Selector",
+      "category": "Product"
+    }
+  ],
+  "templates": ["product"]
+}
+{% endschema %}
+
+{%- assign section_heading = section.settings.heading | default: 'Leather Color' -%}
+{%- assign color_product = all_products['leather-color'] -%}
+
+{%- if color_product and color_product.variants.size > 1 -%}
+  <div class="leather-color-selector product-form__input" data-section-id="{{ section.id }}">
+    <label class="form__label" for="LeatherColor-{{ section.id }}">
+      {{ section_heading -}}
+      {%- if section.settings.show_required -%}
+        <span class="required">*</span>
+      {%- endif %}
+    </label>
+
+    <div class="color-swatches">
+      <!-- Default Option -->
+      <div class="color-swatch active">
+        <input
+          type="radio"
+          id="LeatherColor-{{ section.id }}-Default"
+          name="properties[Leather Color]"
+          value="None"
+          checked
+          class="color-swatch__input visually-hidden"
+        >
+        <label for="LeatherColor-{{ section.id }}-Default" class="color-swatch__label">
+          <div class="color-swatch__container">
+             <div class="color-swatch__image default-placeholder" style="width: 80px; height: 80px; background: #f4f4f4; display: flex; align-items: center; justify-content: center; border: 1px solid #ddd; color: #666; font-size: 0.8rem; font-weight: 500;">Default</div>
+            <span class="color-swatch__name">None</span>
+          </div>
+        </label>
+      </div>
+
+      {%- for variant in color_product.variants limit: 3 -%}
+        <div class="color-swatch">
+          <input
+            type="radio"
+            id="LeatherColor-{{ section.id }}-{{ forloop.index }}"
+            name="properties[Leather Color]"
+            value="{{ variant.title }}"
+            data-variant-id="{{ variant.id }}"
+            class="color-swatch__input visually-hidden"
+          >
+          <label for="LeatherColor-{{ section.id }}-{{ forloop.index }}" class="color-swatch__label">
+            <div class="color-swatch__container">
+              {%- if variant.image -%}
+                <img
+                  src="{{ variant.image.src | img_url: '100x' }}"
+                  alt="{{ variant.title }}"
+                  class="color-swatch__image"
+                  loading="lazy"
+                  width="50"
+                  height="50"
+                >
+              {%- else -%}
+                <div class="color-swatch__placeholder" style="background-color: {{ variant.title | handle }};"></div>
+              {%- endif -%}
+              <span class="color-swatch__name">{{ variant.title }}</span>
+            </div>
+          </label>
+        </div>
+      {%- endfor -%}
+
+      {%- if color_product.variants.size > 3 -%}
+        <div class="color-swatch view-more-swatch">
+          <button type="button" class="view-more-button" aria-label="View more colors" data-view-more-trigger>
+            <span class="view-more-icon">+</span>
+            <span class="view-more-text">View More</span>
+          </button>
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+
+  <!-- Modal for additional colors -->
+  <div class="color-modal" id="ColorModal-{{ section.id }}">
+    <div class="color-modal__overlay" data-modal-close></div>
+    <div class="color-modal__content">
+      <button class="color-modal__close" data-modal-close aria-label="Close modal">&times;</button>
+      <h3 class="color-modal__title">Select Leather Color</h3>
+      <div class="color-modal__swatches">
+        <!-- Default Option in Modal -->
+         <div class="color-swatch">
+            <input
+              type="radio"
+              id="ModalLeatherColor-{{ section.id }}-Default"
+              name="modal_properties[Leather Color]"
+              value="None"
+              class="color-swatch__input visually-hidden"
+            >
+
+            <label for="ModalLeatherColor-{{ section.id }}-Default" class="color-swatch__label">
+              <div class="color-swatch__container">
+                 <div class="color-swatch__image default-placeholder" style="width: 150px; height: 150px; background: #f4f4f4; display: flex; align-items: center; justify-content: center; border: 1px solid #ddd; color: #666; font-size: 0.8rem; font-weight: 500;">Default</div>
+                <span class="color-swatch__name">None</span>
+              </div>
+            </label>
+          </div>
+        {%- for variant in color_product.variants -%}
+          <div class="color-swatch">
+            <input
+              type="radio"
+              id="ModalLeatherColor-{{ section.id }}-{{ forloop.index }}"
+              name="modal_properties[Leather Color]"
+              value="{{ variant.title }}"
+              data-variant-id="{{ variant.id }}"
+              class="color-swatch__input visually-hidden"
+            >
+
+            <label for="LeatherColor-{{ section.id }}-{{ forloop.index }}" class="color-swatch__label">
+              <div class="color-swatch__container">
+                {%- if variant.image -%}
+                  <img
+                    src="{{ variant.image.src | img_url: '100x' }}"
+                    alt="{{ variant.title }}"
+                    class="color-swatch__image"
+                    loading="lazy"
+                    width="50"
+                    height="50"
+                  >
+                {%- else -%}
+                  <div class="color-swatch__placeholder" style="background-color: {{ variant.title | handle }};"></div>
+                {%- endif -%}
+                <span class="color-swatch__name">{{ variant.title }}</span>
+              </div>
+            </label>
+          </div>
+        {%- endfor -%}
+      </div>
+      <button class="button color-modal__confirm" data-modal-confirm>Confirm Selection</button>
+    </div>
+  </div>
+{%- endif -%}
+
+<style>
+  .leather-color-selector {
+    background-color: "#fff";
+    margin-bottom: 2rem;
+  }
+
+  .color-swatches {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 0.5rem;
+    align-items: center;
+  }
+
+  .color-swatch {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .color-swatch__input:checked + .color-swatch__label,
+  .color-swatch.active {
+    /* border: 1px solid #a52a2a; */
+    
+  }
+
+  .color-swatch__label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    /* border: 1px solid transparent; */
+    transition: border 0.2s ease;
+  }
+
+  .color-swatch__image {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 0;
+  }
+
+  .color-modal .color-swatch__image {
+    width: 150px;
+    height: 150px;
+  }
+
+  .color-swatch__name {
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+  }
+
+  /* View More Button Styles */
+  .view-more-swatch {
+    cursor: pointer;
+  }
+
+  .view-more-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    border: 1px dashed #a52a2a;
+    border-radius: 50%;
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .view-more-button:hover {
+    background: #a52a2a;
+    color: #fff;
+  }
+
+  .view-more-icon {
+    font-size: 1.5rem;
+    line-height: 1;
+  }
+
+  .view-more-text {
+    margin-top: 0.5rem;
+    font-size: 0.75rem;
+  }
+
+  /* Modal Styles */
+  .color-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .color-modal.active {
+    display: flex;
+  }
+
+  .color-modal__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+  }
+
+  .color-modal__content {
+    position: relative;
+    background: #fff;
+    padding: 2rem;
+    border-radius: var(--inputs-radius);
+    width: 90%;
+    max-width: 900px;
+    max-height: 80vh;
+    overflow-y: auto;
+    z-index: 2;
+  }
+
+  .color-modal__close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+  }
+
+  .color-swatch__container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .color-modal__title {
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+
+  .color-modal__swatches {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+    justify-content: center;
+    height: 75%;
+    overflow-y: auto;
+    padding: 10px;
+  }
+
+  .color-modal__confirm {
+    width: 100%;
+    margin-top: 1rem;
+  }
+
+  .visually-hidden {
+    position: absolute !important;
+    overflow: hidden;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    border: 0;
+    clip: rect(0 0 0 0);
+    word-wrap: normal !important;
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const sectionId = '{{ section.id }}';
+    const modal = document.querySelector(`#ColorModal-${sectionId}`);
+    const openButtons = document.querySelectorAll(`[data-view-more-trigger]`);
+    const closeButtons = document.querySelectorAll(`[data-modal-close]`);
+    const confirmButton = document.querySelector(`[data-modal-confirm]`);
+    
+    // Open modal
+    openButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      });
+    });
+    
+    // Close modal
+    closeButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+      });
+    });
+    
+    // Confirm selection
+    if (confirmButton) {
+      confirmButton.addEventListener('click', () => {
+        const selectedInput = modal.querySelector('input[name="modal_properties[Leather Color]"]:checked');
+        if (selectedInput) {
+          // Update the main form's selected color
+          const mainInput = document.querySelector(`input[name="properties[Leather Color]"][value="${selectedInput.value}"]`);
+          if (mainInput) {
+            mainInput.checked = true;
+            // Update visual selection
+            document.querySelectorAll('.color-swatch').forEach(swatch => {
+              swatch.classList.remove('active');
+            });
+            mainInput.closest('.color-swatch').classList.add('active');
+          }
+        }
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+      });
+    }
+    
+    // Close modal when clicking outside content
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    });
+  });
+</script>

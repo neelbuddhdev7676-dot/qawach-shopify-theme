@@ -1,0 +1,127 @@
+<div id="customizationModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2 class="modal-title">
+        {{ product.title }}
+      </h2>
+      <button class="close-modal">&times;</button>
+    </div>
+    <audio
+      id="add-to-cart-sound"
+      src="https://cdn.shopify.com/s/files/1/0659/5716/7329/files/ding-126626.mp3?v=1745574251"
+      preload="auto"
+    ></audio>
+
+    <div class="modal-body">
+      <div class="modal-left">
+        <ul class="modal-menu">
+          <li class="modal-menu-item" data-option="hardwareColor" onclick="loadOption('hardwareColor')">Hardware Color <span class="option-price"></span></li>
+          <li class="modal-menu-item" data-option="lining" onclick="loadOption('jacketLining')">Lining <span class="option-price"></span></li>
+          <li class="modal-menu-item" data-option="quiltedLining" onclick="loadOption('quiltedLining')">Quilted Lining <span class="option-price"></span></li>
+          <li class="modal-menu-item" data-option="monogram" onclick="loadOption('monogram')">Monogram <span class="option-price"></span></li>
+          <li class="modal-menu-item" data-option="measurements" onclick="loadOption('measurements')">Measurements <span class="option-price"></span></li>
+          <li class="modal-menu-item" data-option="comments" onclick="loadOption('comments')">Comments <span class="option-price"></span></li>
+          <!-- <li class="modal-menu-item" data-option="totalPrice" onclick="loadOption('totalPrice')">Total Price</li> -->
+        </ul>
+      </div>
+
+      <div class="modal-right" id="customizationContent">
+        <!-- <h3>Choose customizations options from the menu bar</h3> -->
+        <!-- <label for="custom_color">Pick a color:</label> -->
+        <!-- <input type="color" id="custom_color" name="properties[Color]" value="#000000"> -->
+      </div>
+    </div>
+
+    <div id="cartPreview" class="cart-preview">
+      <button id="cartToggle" class="cart-toggle">
+        <span class="cart-count">0</span>
+        <svg viewBox="0 0 24 24" width="24" height="24">
+          <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>
+        </svg>
+      </button>
+      <div class="cart-dropdown">
+        <div class="cart-items"></div>
+        <div class="cart-total"><strong>Total:</strong> <span class="total-amount">$0.00</span></div>
+        <button class="button button-primary view-cart">View Cart</button>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <div>
+        <div class="customization-modal-total" id="customization-modal-total" style="font-size:1.2em;font-weight:bold;color:#b71c1c;margin-bottom:12px;text-align:right;">
+          Total: 
+          {% if compare_at_price > price %}
+            <s class="modal-total-compare-price" style="color: rgba(var(--color-foreground), 0.75); margin-right: 5px;">${{ compare_at_price | divided_by: 100 }}</s>
+          {% endif %}
+          <span class="modal-total-regular-price">${{ price | divided_by: 100 }}</span>
+        </div>
+        <button id="saveCustomizations" class="button button-primary">
+          <span class="button__text">Add to Cart</span>
+          {% render 'loading-spinner' %}
+        </button>
+        <!-- <button id="closeModal" class="button button-secondary">Close</button> -->
+      </div>
+    </div>
+  </div>
+</div>
+
+{% # assign hardware_colors = product.metafields.custom.hardware_colors.value %}
+{% assign current_product = product | json %}
+{% # assign hardware_colors_array = hardware_colors | map: 'id' %}
+{% # assign hardware_colors_size = hardware_colors_array.size %}
+
+<!--
+  <script>
+    window.productData = {
+      hardwareColors:[ {% for color in hardware_colors %}
+          {
+            name: {{ color.antique_brass | json }},
+            priceAdjustment: {{ color.price_adjustment | default: 0 }},
+            isTwoWay: {{ color.is_two_way | json }},
+            imageUrl: {{ color.option_image | img_url: '200x' | json }},
+            antiqueBrass: {{ color.antique_brass | json }}
+          }{% unless forloop.last %},{% endunless %}
+        {% endfor %}
+      ],
+      hardwareColorsCount: {{ hardware_colors_size | json }},
+      basePrice: {{ product.price | money_without_currency | default: 0 }}
+    };
+    window.variantId = {{ product.variants.first.id }};
+    console.log(productData)
+  </script>
+-->
+<script>
+  {% assign customization_collections = customization_collection %}
+    window.productData = {
+      basePrice: {{ price | money_without_currency | default: 0 }},
+      compareAtPrice: {{ compare_at_price | money_without_currency | default: 0 }},
+      product: {{ current_product }}
+    };
+  window.customization_options = [
+          {% for product in customization_collections.products %}
+          {
+            title: "{{ product.title | escape }}",
+            image: "{{ product.featured_image | img_url: '300x' }}",
+            price: {{ product.price | divided_by: 100 }},
+            productId: {{ product.id }},
+            variants: {{ product.variants | json }},
+          }{% unless forloop.last %},{% endunless %}
+        {% endfor %}
+      ];
+</script>
+
+<style>
+
+  .modal-right-header {
+    display: none
+  }
+  .modal-compare-price {
+    text-decoration: line-through;
+    color: rgba(var(--color-foreground), 0.75);
+    margin-right: 10px;
+    font-size: 0.9em;
+  }
+  .modal-regular-price {
+    color: rgb(var(--color-foreground));
+    font-weight: bold;
+  }
+</style>

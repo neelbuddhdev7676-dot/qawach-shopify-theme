@@ -1,0 +1,314 @@
+/* ========================================
+   Sticky CTA Bar - Product Pages
+   ======================================== */
+
+/* Desktop Sticky Bar */
+.sticky-cta-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #ffffff;
+    border-top: 1px solid rgba(18, 18, 18, 0.1);
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 999;
+    transform: translateY(100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    padding: 0;
+}
+
+.sticky-cta-bar.visible {
+    transform: translateY(0);
+}
+
+.sticky-cta-bar__container {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+}
+
+.sticky-cta-bar__product {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex: 0 0 auto;
+}
+
+.sticky-cta-bar__image {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 4px;
+    border: 1px solid rgba(18, 18, 18, 0.1);
+}
+
+.sticky-cta-bar__details {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.sticky-cta-bar__title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #121212;
+    margin: 0;
+    line-height: 1.3;
+    max-width: 300px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.sticky-cta-bar__price {
+    font-size: 16px;
+    font-weight: 700;
+    color: #a52a2a;
+    margin: 0;
+}
+
+.sticky-cta-bar__price .price-item--regular {
+    text-decoration: line-through;
+    color: #888;
+    font-size: 14px;
+    margin-right: 8px;
+}
+
+.sticky-cta-bar__actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 0 0 auto;
+}
+
+.sticky-cta-bar__button {
+    padding: 14px 28px;
+    font-size: 15px;
+    font-weight: 600;
+    border-radius: 4px;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    min-width: 140px;
+    text-align: center;
+}
+
+.sticky-cta-bar__button--customize {
+    background: #ffffff;
+    color: #121212;
+    border-color: #121212;
+}
+
+.sticky-cta-bar__button--customize:hover {
+    background: #121212;
+    color: #ffffff;
+}
+
+.sticky-cta-bar__button--add-to-cart {
+    background: #a52a2a;
+    color: #ffffff;
+    border-color: #a52a2a;
+}
+
+.sticky-cta-bar__button--add-to-cart:hover {
+    background: #8a2323;
+    border-color: #8a2323;
+}
+
+.sticky-cta-bar__button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Mobile Bottom Bar - Always Visible */
+.mobile-cta-bar {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #ffffff;
+    border-top: 1px solid rgba(18, 18, 18, 0.1);
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+    padding: 12px 16px;
+    padding-bottom: calc(12px + env(safe-area-inset-bottom));
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.mobile-cta-bar.hidden-for-footer {
+    transform: translateY(100%);
+}
+
+.mobile-cta-bar__container {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.mobile-cta-bar__price-wrapper {
+    flex: 0 0 auto;
+    padding-right: 8px;
+}
+
+.mobile-cta-bar__price {
+    font-size: 18px;
+    font-weight: 700;
+    color: #a52a2a;
+    margin: 0;
+    line-height: 1.2;
+}
+
+.mobile-cta-bar__price-regular {
+    font-size: 14px;
+    color: #888;
+    text-decoration: line-through;
+    display: block;
+    margin-top: 2px;
+}
+
+.mobile-cta-bar__buttons {
+    display: flex;
+    gap: 8px;
+    flex: 1;
+}
+
+.mobile-cta-bar__button {
+    flex: 1;
+    padding: 14px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 4px;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: center;
+    min-height: 48px;
+    /* Touch target size */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mobile-cta-bar__button--customize {
+    background: #ffffff;
+    color: #121212;
+    border-color: #121212;
+    flex: 0 0 auto;
+    padding: 14px 20px;
+}
+
+.mobile-cta-bar__button--add-to-cart {
+    background: #a52a2a;
+    color: #ffffff;
+    border-color: #a52a2a;
+}
+
+.mobile-cta-bar__button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Responsive Breakpoints */
+@media screen and (max-width: 989px) {
+    .sticky-cta-bar {
+        display: none;
+    }
+
+    .mobile-cta-bar {
+        display: block;
+    }
+}
+
+@media screen and (min-width: 990px) {
+    .mobile-cta-bar {
+        display: none;
+    }
+
+    /* .sticky-cta-bar__actions {
+        padding-right: 120px;
+    } */
+}
+
+@media screen and (max-width: 749px) {
+    .sticky-cta-bar__title {
+        max-width: 200px;
+    }
+
+    .sticky-cta-bar__button {
+        min-width: 120px;
+        padding: 12px 20px;
+        font-size: 14px;
+    }
+
+    .mobile-cta-bar__price-wrapper {
+        display: none;
+        /* Hide price on very small screens for space */
+    }
+
+    .mobile-cta-bar__button--customize {
+        padding: 14px 12px;
+    }
+}
+
+/* Add spacing to page content to prevent overlap with mobile bar */
+@media screen and (max-width: 989px) {
+    .product {
+        padding-bottom: 80px;
+    }
+}
+
+/* Animation */
+@keyframes slideUp {
+    from {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.sticky-cta-bar.visible {
+    animation: slideUp 0.3s ease-out;
+}
+
+/* Accessibility - Focus states */
+.sticky-cta-bar__button:focus,
+.mobile-cta-bar__button:focus {
+    outline: 2px solid #a52a2a;
+    outline-offset: 2px;
+}
+
+/* Dark mode support (if needed) */
+@media (prefers-color-scheme: dark) {
+
+    .sticky-cta-bar,
+    .mobile-cta-bar {
+        background: #1a1a1a;
+        border-top-color: rgba(245, 245, 245, 0.1);
+    }
+
+    .sticky-cta-bar__title {
+        color: #f5f5f5;
+    }
+
+    .sticky-cta-bar__button--customize,
+    .mobile-cta-bar__button--customize {
+        background: #1a1a1a;
+        color: #f5f5f5;
+        border-color: #f5f5f5;
+    }
+
+    .sticky-cta-bar__button--customize:hover {
+        background: #f5f5f5;
+        color: #1a1a1a;
+    }
+}

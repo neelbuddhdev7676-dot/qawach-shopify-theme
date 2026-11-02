@@ -1,0 +1,144 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "disabled": true,
+      "settings": {
+        "padding_top": 100,
+        "padding_bottom": 100
+      }
+    },
+    "faq_7jXb7N": {
+      "type": "faq",
+      "blocks": {
+        "faq_item_rc9fxq": {
+          "type": "faq_item",
+          "settings": {
+            "category": "Shipping",
+            "question": "How long does shipping take?",
+            "answer": "<p>Orders ship within 3-4 business days.</p>"
+          }
+        },
+        "faq_item_iaGnBz": {
+          "type": "faq_item",
+          "settings": {
+            "category": "Shipping",
+            "question": "How do I care for my leather item?",
+            "answer": "<p>Simple care routine:</p><ol><li>Condition every 3-6 months with a <strong>natural leather balm</strong></li><li>Store away from direct heat</li><li>Wipe spills immediately with a dry cloth</li></ol>"
+          }
+        },
+        "faq_item_kG7Qmb": {
+          "type": "faq_item",
+          "settings": {
+            "category": "Shipping",
+            "question": "Can I track my order?",
+            "answer": "<p>Yes! You’ll receive a tracking link via email/SMS the moment your order ships.</p>"
+          }
+        },
+        "faq_item_RtALbY": {
+          "type": "faq_item",
+          "settings": {
+            "category": "Ordering & Customization",
+            "question": "Can I customize products?",
+            "answer": "<p>Absolutely! Choose from:</p><ul><li>Hardware finishes (brass, silver, black)</li><li>Lining</li><li>Quilted Lining</li><li>Monogramming</li><li>Custom sizing</li></ul>"
+          }
+        },
+        "faq_item_XnRRxr": {
+          "type": "faq_item",
+          "settings": {
+            "category": "Ordering & Customization",
+            "question": "How long do custom orders take?",
+            "answer": "<p>Custom orders are shipped within 3-4 business days.<br/><br/></p>"
+          }
+        },
+        "faq_item_hf6dTr": {
+          "type": "faq_item",
+          "settings": {
+            "category": "Ordering & Customization",
+            "question": "Can you replicate a discontinued design?",
+            "answer": "<p>Possibly! Send photos to <a href=\"https://mailto:qawachleather@gmail.com/\" target=\"_blank\"><strong>qawachleather@gmail.com </strong></a>for a quote.</p>"
+          }
+        },
+        "faq_item_H378gd": {
+          "type": "faq_item",
+          "settings": {
+            "category": "Returns",
+            "question": "What's your return policy?",
+            "answer": "<p>30-day return policy.</p>"
+          }
+        },
+        "faq_item_wCCtgJ": {
+          "type": "faq_item",
+          "settings": {
+            "category": "Returns",
+            "question": "How do I start a return?",
+            "answer": "<p>Email us at <a href=\"https://mailto:qawachleather@gmail.com/\" target=\"_blank\"><strong>qawachleather@gmail.com</strong></a> with:</p><ol><li>Order number</li><li>Product photos</li><li>Reason for return</li></ol>"
+          }
+        },
+        "faq_item_mX94an": {
+          "type": "faq_item",
+          "settings": {
+            "category": "Returns",
+            "question": "My item arrived damaged. What should I do?",
+            "answer": "<p>Email <a href=\"https://mailto:qawachleather@gmail.com/\" target=\"_blank\"><strong>qawachleather@gmail.com</strong></a> within <strong>7 days</strong> with:</p><ul><li>Photos of damage</li><li>Packaging images</li></ul><p>We’ll send a replacement immediately!</p>"
+          }
+        },
+        "faq_item_jyMMNc": {
+          "type": "faq_item",
+          "settings": {
+            "category": "Returns",
+            "question": "Are return fees deducted?",
+            "answer": "<p>Yes, we deduct:</p><ul><li>Original shipping costs (if free shipping was applied)</li><li>5% restocking fee for non-defective returns</li></ul>"
+          }
+        },
+        "faq_item_cCkjxU": {
+          "type": "faq_item",
+          "settings": {
+            "category": "Ordering & Payments",
+            "question": "What payment methods do you accept?",
+            "answer": "<p>All major cards (Visa, Amex, MC), PayPal, and Shop Pay.</p>"
+          }
+        },
+        "faq_item_XFjpwz": {
+          "type": "faq_item",
+          "settings": {
+            "category": "Ordering & Payments",
+            "question": "Can I modify my order after placing it?",
+            "answer": "<p>Contact us <strong>within 2 hours </strong>at <a href=\"https://mailto:qawachleather@gmail.com/\" target=\"_blank\"><strong>qawachleather@gmail.com</strong></a>. After that, changes can’t be guaranteed.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "faq_item_rc9fxq",
+        "faq_item_iaGnBz",
+        "faq_item_kG7Qmb",
+        "faq_item_RtALbY",
+        "faq_item_XnRRxr",
+        "faq_item_hf6dTr",
+        "faq_item_H378gd",
+        "faq_item_wCCtgJ",
+        "faq_item_mX94an",
+        "faq_item_jyMMNc",
+        "faq_item_cCkjxU",
+        "faq_item_XFjpwz"
+      ],
+      "name": "FAQ Simple",
+      "settings": {
+        "heading": "Frequently Asked Questions"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "faq_7jXb7N"
+  ]
+}

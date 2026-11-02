@@ -1,0 +1,263 @@
+/* ============================================
+   Premium Snowfall Effect - Qawach.com
+   Active: December 1 - January 31
+   ============================================ */
+
+/* Snowfall Container */
+#snowfall-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+    overflow: hidden;
+    /* Gradient mask to fade out just below navbar */
+    -webkit-mask-image: linear-gradient(to bottom,
+            rgba(0, 0, 0, 1) 0%,
+            rgba(0, 0, 0, 1) 70px,
+            rgba(0, 0, 0, 0.6) 110px,
+            rgba(0, 0, 0, 0.2) 150px,
+            rgba(0, 0, 0, 0) 180px);
+    mask-image: linear-gradient(to bottom,
+            rgba(0, 0, 0, 1) 0%,
+            rgba(0, 0, 0, 1) 70px,
+            rgba(0, 0, 0, 0.6) 110px,
+            rgba(0, 0, 0, 0.2) 150px,
+            rgba(0, 0, 0, 0) 180px);
+}
+
+/* Individual Snowflake - Softer, more snow-like */
+.snowflake {
+    position: absolute;
+    top: -20px;
+    /* Start much higher, above viewport */
+    color: #fff;
+    opacity: 0.95;
+    pointer-events: none;
+    animation-name: snowfall;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    /* Circular base with snowflake character overlay */
+    width: 8px;
+    height: 8px;
+    font-size: 10px;
+    line-height: 8px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* Soft glow effect using drop-shadow instead of blur filter */
+    filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.9)) drop-shadow(0 0 6px rgba(255, 255, 255, 0.6)) drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
+    /* Character shadow for depth */
+    text-shadow: 0 0 4px rgba(255, 255, 255, 1),
+        0 0 8px rgba(255, 255, 255, 0.8);
+}
+
+/* Add circular glow behind using ::before pseudo-element */
+.snowflake::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0.3) 50%, rgba(255, 255, 255, 0) 100%);
+    z-index: -1;
+    filter: blur(3px);
+}
+
+/* Snowfall Animation - Base (medium fade) */
+@keyframes snowfall {
+    0% {
+        top: -30%;
+        /* Start higher above screen */
+        opacity: 0;
+    }
+
+    10% {
+        opacity: 0.8;
+    }
+
+    70% {
+        opacity: 0.8;
+    }
+
+    100% {
+        top: 110%;
+        opacity: 0;
+    }
+}
+
+/* Early fade - for small, lighter snowflakes */
+@keyframes snowfall-early-fade {
+    0% {
+        top: -30%;
+        opacity: 0;
+    }
+
+    10% {
+        opacity: 0.6;
+    }
+
+    25% {
+        opacity: 0.5;
+    }
+
+    50% {
+        opacity: 0;
+        /* Fade out completely by 50% down */
+    }
+
+    100% {
+        top: 110%;
+        opacity: 0;
+    }
+}
+
+/* Late fade - for larger, heavier snowflakes */
+@keyframes snowfall-late-fade {
+    0% {
+        top: -30%;
+        opacity: 0;
+    }
+
+    10% {
+        opacity: 0.9;
+    }
+
+    80% {
+        opacity: 0.85;
+    }
+
+    100% {
+        top: 110%;
+        /* Reach bottom before fading completely */
+        opacity: 0;
+    }
+}
+
+/* Gentle Sway Animation */
+@keyframes sway {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    50% {
+        transform: translateX(20px);
+    }
+}
+
+/* Different snowflake sizes with realistic fade patterns */
+.snowflake.small {
+    width: 6px;
+    height: 6px;
+    font-size: 7px;
+    line-height: 6px;
+    opacity: 0.6;
+    animation-name: snowfall-early-fade;
+    /* Fades early - lighter/smaller */
+}
+
+.snowflake.small::before {
+    filter: blur(1.5px);
+}
+
+.snowflake.medium {
+    width: 8px;
+    height: 8px;
+    font-size: 10px;
+    line-height: 8px;
+    opacity: 0.75;
+    animation-name: snowfall;
+    /* Standard fade */
+}
+
+.snowflake.medium::before {
+    filter: blur(2px);
+}
+
+.snowflake.large {
+    width: 12px;
+    height: 12px;
+    font-size: 14px;
+    line-height: 12px;
+    opacity: 0.85;
+    animation-name: snowfall-late-fade;
+    /* Fades late - heavier/larger */
+}
+
+.snowflake.large::before {
+    filter: blur(3px);
+}
+
+/* Desktop: Richer effect with more flakes */
+@media screen and (min-width: 750px) {
+    .snowflake {
+        animation-duration: 12s;
+    }
+
+    .snowflake.slow {
+        animation-duration: 18s;
+    }
+
+    .snowflake.fast {
+        animation-duration: 8s;
+    }
+
+    /* Add subtle sway */
+    .snowflake:nth-child(3n) {
+        animation-name: snowfall, sway;
+        animation-duration: 12s, 4s;
+    }
+}
+
+/* Mobile: Lighter, simpler effect */
+@media screen and (max-width: 749px) {
+    .snowflake {
+        animation-duration: 10s;
+        opacity: 0.4;
+        filter: blur(2px);
+    }
+
+    /* Hide some flakes on mobile for performance */
+    .snowflake:nth-child(n+16) {
+        display: none;
+    }
+
+    /* Simpler - no sway on mobile */
+    .snowflake {
+        animation-name: snowfall;
+    }
+
+    /* Shorter gradient mask on mobile */
+    #snowfall-container {
+        -webkit-mask-image: linear-gradient(to bottom,
+                rgba(0, 0, 0, 1) 0%,
+                rgba(0, 0, 0, 0.8) 50px,
+                rgba(0, 0, 0, 0.3) 90px,
+                rgba(0, 0, 0, 0) 120px);
+        mask-image: linear-gradient(to bottom,
+                rgba(0, 0, 0, 1) 0%,
+                rgba(0, 0, 0, 0.8) 50px,
+                rgba(0, 0, 0, 0.3) 90px,
+                rgba(0, 0, 0, 0) 120px);
+    }
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+    .snowflake {
+        animation-duration: 0.01s !important;
+        opacity: 0.3 !important;
+    }
+}
+
+/* Performance optimization: Use GPU acceleration */
+.snowflake {
+    will-change: transform, opacity;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+}

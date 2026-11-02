@@ -1,0 +1,166 @@
+{%- comment -%}
+  Qawach Black Friday opening banner. Sits above the Atelier motion hero.
+  Dark leather stage, animated headline with a gold sweep, two floating products and a ticker.
+  The offer badge only shows when an offer is typed in (no discount is advertised by default).
+{%- endcomment -%}
+{%- liquid
+  assign b = section.settings
+  assign shop_url = b.shop_link | default: routes.all_products_collection_url
+-%}
+{%- if b.enabled -%}
+<style>
+  .qbf { --qbf-ink: #0E0C0A; --qbf-ivory: #F5EDE1; --qbf-gold: #D4AE5E; --qbf-gold-2: #F1D79A; --qbf-muted: #B9AC98;
+    position: relative; overflow: hidden; background: var(--qbf-ink); color: var(--qbf-ivory);
+    min-height: min(92svh, 860px); display: grid; align-items: center;
+    padding: 96px max(20px, env(safe-area-inset-right, 0px)) 92px max(20px, env(safe-area-inset-left, 0px));
+    font-family: 'Manrope', 'Helvetica Neue', Arial, sans-serif; isolation: isolate; }
+  .qbf *, .qbf *::before, .qbf *::after { box-sizing: border-box; }
+  .qbf-tex { position: absolute; inset: 0; z-index: -2; }
+  .qbf-tex img { width: 100%; height: 100%; object-fit: cover; opacity: .2; filter: grayscale(.3) contrast(1.1); display: block; }
+  .qbf::before { content: ""; position: absolute; inset: 0; z-index: -1; background:
+      radial-gradient(48% 60% at 72% 46%, rgba(212,174,94,.24), rgba(212,174,94,0) 70%),
+      linear-gradient(90deg, rgba(14,12,10,.96) 0%, rgba(14,12,10,.72) 48%, rgba(14,12,10,.55) 100%); }
+  .qbf-in { width: 100%; max-width: 1360px; margin: 0 auto; display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); align-items: center; gap: clamp(24px, 4vw, 64px); }
+  .qbf-copy { display: flex; flex-direction: column; align-items: flex-start; gap: 18px; min-width: 0; }
+  .qbf-eyebrow { margin: 0; font-size: 12px; font-weight: 600; letter-spacing: .32em; text-transform: uppercase; color: var(--qbf-gold); display: inline-flex; align-items: center; gap: 12px; }
+  .qbf-eyebrow::before { content: ""; width: 34px; height: 1px; background: currentColor; }
+  .qbf-title { margin: 0; font-family: 'Cormorant Garamond', Garamond, Georgia, serif; font-weight: 500; line-height: .86; letter-spacing: .005em;
+    font-size: clamp(64px, 10.4vw, 168px); text-transform: uppercase; display: flex; flex-direction: column; }
+  .qbf-line { display: block; overflow: hidden; padding-bottom: .04em; }
+  .qbf-word { display: inline-block;
+    background: linear-gradient(100deg, var(--qbf-ivory) 0%, var(--qbf-ivory) 38%, var(--qbf-gold-2) 47%, #FFF6E2 50%, var(--qbf-gold) 53%, var(--qbf-ivory) 62%, var(--qbf-ivory) 100%);
+    background-size: 260% 100%; background-position: 100% 0; -webkit-background-clip: text; background-clip: text; color: transparent;
+    animation: qbf-shine 5.5s cubic-bezier(.45,0,.2,1) 1.8s infinite; }
+  @keyframes qbf-shine { 0% { background-position: 100% 0; } 55%, 100% { background-position: 0% 0; } }
+  .qbf-sub { margin: 4px 0 0; font-size: clamp(15px, 1.6vw, 22px); font-weight: 600; letter-spacing: .42em; text-transform: uppercase; color: var(--qbf-gold); }
+  .qbf-offer { display: inline-flex; align-items: center; min-height: 56px; padding: 0 22px; background: var(--qbf-ivory); color: var(--qbf-ink); font-family: 'Cormorant Garamond', Garamond, Georgia, serif; font-size: clamp(26px, 2.6vw, 38px); font-weight: 500; letter-spacing: .04em; }
+  .qbf-tag { margin: 6px 0 0; font-family: 'Cormorant Garamond', Garamond, Georgia, serif; font-style: italic; font-size: clamp(22px, 2.2vw, 32px); line-height: 1.2; color: var(--qbf-ivory); }
+  .qbf-tag em { color: var(--qbf-gold-2); }
+  .qbf-text { margin: 0; max-width: 42ch; color: var(--qbf-muted); font-size: 15px; line-height: 1.6; }
+  .qbf-ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 8px; }
+  .qbf-btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 52px; padding: 0 28px; border-radius: 999px; text-decoration: none; font-size: 12px; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; transition: background .3s, color .3s, border-color .3s, transform .3s; cursor: pointer; font-family: inherit; }
+  .qbf-btn--gold { background: var(--qbf-gold); color: var(--qbf-ink); border: 1px solid var(--qbf-gold); }
+  .qbf-btn--gold:hover { background: var(--qbf-gold-2); border-color: var(--qbf-gold-2); color: var(--qbf-ink); }
+  .qbf-btn--line { background: transparent; color: var(--qbf-ivory); border: 1px solid rgba(245,237,225,.42); }
+  .qbf-btn--line:hover { border-color: var(--qbf-gold-2); color: var(--qbf-gold-2); }
+  .qbf-stage { position: relative; height: min(64svh, 600px); min-width: 0; }
+  .qbf-ring { position: absolute; left: 50%; top: 50%; width: min(78%, 520px); aspect-ratio: 1; transform: translate(-50%, -50%); border-radius: 50%; border: 1px solid rgba(212,174,94,.35);
+    box-shadow: 0 0 0 18px rgba(212,174,94,.05), 0 0 120px rgba(212,174,94,.18) inset; }
+  .qbf-ring::after { content: ""; position: absolute; inset: -1px; border-radius: 50%; border: 1px solid transparent; border-top-color: var(--qbf-gold-2); animation: qbf-spin 9s linear infinite; }
+  @keyframes qbf-spin { to { transform: rotate(360deg); } }
+  .qbf-prod { position: absolute; display: block; width: auto; max-width: none; filter: drop-shadow(0 40px 46px rgba(0,0,0,.55)); }
+  .qbf-prod--a { left: 6%; top: 4%; height: 88%; animation: qbf-float 7s ease-in-out infinite; }
+  .qbf-prod--b { right: 2%; bottom: 4%; height: 40%; animation: qbf-float 6s ease-in-out -2s infinite; }
+  @keyframes qbf-float { 0%, 100% { translate: 0 0; rotate: 0deg; } 50% { translate: 0 -14px; rotate: -1.2deg; } }
+  .qbf-ticker { position: absolute; left: 0; right: 0; bottom: 0; border-top: 1px solid rgba(212,174,94,.28); background: rgba(14,12,10,.72); overflow: hidden; padding-block: 14px; }
+  .qbf-ticker-track { display: flex; width: max-content; animation: qbf-marq 34s linear infinite; }
+  .qbf-ticker span { display: inline-flex; align-items: center; gap: 28px; padding-right: 28px; white-space: nowrap; font-size: 12px; font-weight: 600; letter-spacing: .3em; text-transform: uppercase; color: var(--qbf-ivory); }
+  .qbf-ticker i { font-style: normal; color: var(--qbf-gold); }
+  @keyframes qbf-marq { to { transform: translateX(-50%); } }
+  body:has(.qbf) #qm .qm-hdr { background: rgba(244,239,231,.94); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); }
+  @media (max-width: 749px) {
+    .qbf { min-height: auto; padding-top: 78px; padding-bottom: 70px; }
+    .qbf-in { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+    .qbf-copy { align-items: center; text-align: center; gap: 14px; }
+    .qbf-eyebrow { font-size: 11px; letter-spacing: .26em; }
+    .qbf-eyebrow::before { display: none; }
+    .qbf-title { font-size: 19vw; align-items: center; }
+    .qbf-sub { font-size: 14px; letter-spacing: .36em; }
+    .qbf-tag { font-size: 22px; }
+    .qbf-text { font-size: 14px; }
+    .qbf-ctas { width: 100%; flex-direction: column; }
+    .qbf-btn { width: 100%; }
+    .qbf-stage { order: -1; height: 300px; margin-top: 6px; }
+    .qbf-ring { width: 260px; }
+    .qbf-prod--a { left: 50%; top: 2%; height: 96%; margin-left: -34%; }
+    .qbf-prod--b { right: 4%; bottom: 0; height: 44%; }
+    .qbf-ticker { padding-block: 11px; }
+    .qbf-ticker span { font-size: 10px; gap: 20px; padding-right: 20px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .qbf-word, .qbf-ring::after, .qbf-prod--a, .qbf-prod--b, .qbf-ticker-track { animation: none; }
+  }
+</style>
+
+<section class="qbf" data-qbf aria-label="{{ b.eyebrow | escape }}">
+  <div class="qbf-tex" aria-hidden="true">{%- if b.texture != blank -%}{{ b.texture | image_url: width: 1800 | image_tag: alt: '', loading: 'eager', sizes: '100vw' }}{%- endif -%}</div>
+  <div class="qbf-in">
+    <div class="qbf-copy">
+      <p class="qbf-eyebrow" data-qbf-in>{{ b.eyebrow }}</p>
+      <h2 class="qbf-title" aria-label="{{ b.title_1 }} {{ b.title_2 }}">
+        <span class="qbf-line" aria-hidden="true"><span class="qbf-word" data-qbf-word>{{ b.title_1 }}</span></span>
+        <span class="qbf-line" aria-hidden="true"><span class="qbf-word" data-qbf-word>{{ b.title_2 }}</span></span>
+      </h2>
+      {%- if b.sub != blank -%}<p class="qbf-sub" data-qbf-in>{{ b.sub }}</p>{%- endif -%}
+      {%- if b.offer != blank -%}<p class="qbf-offer" data-qbf-in>{{ b.offer }}</p>{%- endif -%}
+      {%- if b.tagline_1 != blank -%}<p class="qbf-tag" data-qbf-in>{{ b.tagline_1 }} <em>{{ b.tagline_2 }}</em></p>{%- endif -%}
+      {%- if b.text != blank -%}<p class="qbf-text" data-qbf-in>{{ b.text }}</p>{%- endif -%}
+      <div class="qbf-ctas" data-qbf-in>
+        <a class="qbf-btn qbf-btn--gold" href="{{ shop_url }}">{{ b.shop_label }}</a>
+        <a class="qbf-btn qbf-btn--line" href="#customize" data-qcz-open>{{ b.custom_label }}</a>
+      </div>
+    </div>
+    <div class="qbf-stage" aria-hidden="true">
+      <span class="qbf-ring"></span>
+      {%- if b.image_a != blank -%}{{ b.image_a | image_url: width: 1100 | image_tag: class: 'qbf-prod qbf-prod--a', alt: '', loading: 'eager', sizes: '(max-width: 749px) 70vw, 40vw' }}{%- endif -%}
+      {%- if b.image_b != blank -%}{{ b.image_b | image_url: width: 800 | image_tag: class: 'qbf-prod qbf-prod--b', alt: '', loading: 'eager', sizes: '(max-width: 749px) 45vw, 22vw' }}{%- endif -%}
+    </div>
+  </div>
+  {%- if b.ticker != blank -%}
+    {%- assign items = b.ticker | split: '|' -%}
+    {%- capture tick -%}<span>{%- for it in items -%}{{ it | strip }} <i>✦</i> {% endfor -%}</span>{%- endcapture -%}
+    <div class="qbf-ticker" aria-hidden="true"><div class="qbf-ticker-track">{{ tick }}{{ tick }}{{ tick }}{{ tick }}</div></div>
+  {%- endif -%}
+</section>
+
+<script>
+  (function () {
+    var root = document.querySelector('[data-qbf]');
+    if (!root) return;
+    function run() {
+      if (!window.gsap || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      var words = root.querySelectorAll('[data-qbf-word]');
+      var ins = root.querySelectorAll('[data-qbf-in]');
+      var prods = root.querySelectorAll('.qbf-prod');
+      gsap.set(words, { yPercent: 110 });
+      gsap.set(ins, { y: 22, opacity: 0 });
+      gsap.set(prods, { opacity: 0, y: 70, scale: .92 });
+      gsap.set('.qbf-ring', { opacity: 0, scale: .8 });
+      var go = function () {
+        gsap.timeline()
+          .to(words, { yPercent: 0, duration: 1.15, ease: 'power4.out', stagger: .12 })
+          .to('.qbf-ring', { opacity: 1, scale: 1, duration: 1.4, ease: 'power3.out' }, .1)
+          .to(prods, { opacity: 1, y: 0, scale: 1, duration: 1.3, ease: 'power3.out', stagger: .18 }, .25)
+          .to(ins, { y: 0, opacity: 1, duration: .8, ease: 'power2.out', stagger: .08 }, .45);
+        if (window.ScrollTrigger) {
+          gsap.to('.qbf-stage', { yPercent: 14, ease: 'none', scrollTrigger: { trigger: root, start: 'top top', end: 'bottom top', scrub: true } });
+          gsap.to('.qbf-copy', { yPercent: -8, opacity: .25, ease: 'none', scrollTrigger: { trigger: root, start: 'top top', end: 'bottom top', scrub: true } });
+        }
+      };
+      if (window.qmReady || !document.querySelector('.qm-pre')) { go(); } else { document.addEventListener('qm:ready', go, { once: true }); setTimeout(function () { if (!window.qmReady) go(); }, 4500); }
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run); else run();
+  })();
+</script>
+{%- endif -%}
+
+{% schema %}
+{"name":"Black Friday banner","tag":"div","class":"qbf-section","settings":[
+{"type":"checkbox","id":"enabled","label":"Show banner","default":true},
+{"type":"text","id":"eyebrow","label":"Small label","default":"Qawach Black Friday"},
+{"type":"text","id":"title_1","label":"Headline line 1","default":"Black"},
+{"type":"text","id":"title_2","label":"Headline line 2","default":"Friday"},
+{"type":"text","id":"sub","label":"Sub headline","default":"Early access"},
+{"type":"text","id":"offer","label":"Offer badge","info":"Only shows when filled in. Type the exact offer once the client confirms it, for example 10% OFF."},
+{"type":"text","id":"tagline_1","label":"Tagline","default":"You dream,"},
+{"type":"text","id":"tagline_2","label":"Tagline (gold italic)","default":"we customize."},
+{"type":"textarea","id":"text","label":"Text","default":"Hand-cut genuine leather jackets and pillow covers, made to your size, colour and detail."},
+{"type":"text","id":"shop_label","label":"Main button","default":"Shop early access"},
+{"type":"url","id":"shop_link","label":"Main button link"},
+{"type":"text","id":"custom_label","label":"Second button","default":"Customize yours"},
+{"type":"image_picker","id":"image_a","label":"Large product (transparent cut-out)"},
+{"type":"image_picker","id":"image_b","label":"Small product (transparent cut-out)"},
+{"type":"image_picker","id":"texture","label":"Background texture"},
+{"type":"text","id":"ticker","label":"Ticker items (separate with |)","default":"Black Friday early access | Genuine leather, cut by hand | You dream, we customize | Jackets | Pillow covers"}
+],"presets":[{"name":"Black Friday banner"}]}
+{% endschema %}

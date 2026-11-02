@@ -1,0 +1,55 @@
+{% schema %}
+{
+  "name": "Customization Modal",
+  "settings": []
+}
+{% endschema %}
+
+<style>
+  /* Customization Modal styles */
+  .modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none; /* Hidden by default */
+    align-items: center;
+    justify-content: center;
+    z-index: 1000; /* Ensure it's on top */
+  }
+
+  .modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+  }
+
+  button {
+    margin-top: 10px;
+    padding: 10px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+  }
+
+  button:hover {
+    background-color: #0056b3;
+  }
+
+  .no-scroll {
+    overflow: hidden;
+    height: 100vh;
+  }
+</style>
+
+<!-- snippets/customization-modal.liquid -->
+<div id="customizationModal" class="modal" style="display: none;">
+  <div class="modal-content">
+    <h2>Customization Options</h2>
+    <button id="closeModal">Close</button>
+  </div>
+</div>

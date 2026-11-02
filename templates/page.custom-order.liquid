@@ -1,0 +1,7 @@
+{% assign selected_product = all_products[section.settings.linked_product] %}
+{% assign customization_collections = collections[section.settings.customization_collection] %}
+
+{% render 'custom-order',
+  customization_collection: collections['customization-addons'],
+  selected_product: all_products['custom-order']
+%}

@@ -1,0 +1,24 @@
+{%- liquid
+  assign amz = product.metafields.custom.amazon_url.value | default: 'https://www.amazon.com/stores/QAWACH/page/422A1015-5D46-432C-A66A-F7A0AE40D9ED'
+  assign ar = product.metafields.custom.amazon_rating.value
+-%}
+{%- if ar.count > 0 -%}
+  {%- assign pct = ar.rating | times: 20 -%}
+  <a class="qawach-amz-rating" href="https://www.amazon.com/product-reviews/{{ ar.asin }}" target="_blank" rel="noopener" aria-label="Rated {{ ar.rating }} out of 5 from {{ ar.count }} ratings on Amazon. Read the reviews on Amazon.">
+    <span class="qawach-amz-stars" aria-hidden="true"><span class="qawach-amz-stars__fill" style="width: {{ pct }}%">&#9733;&#9733;&#9733;&#9733;&#9733;</span>&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+    <strong>{{ ar.rating }}</strong>
+    <span>&middot; {{ ar.count }} ratings on Amazon</span>
+    <span class="qawach-amz-rating__link">Read reviews &rarr;</span>
+  </a>
+{%- endif -%}
+<a class="qawach-amz" href="{{ amz }}" target="_blank" rel="noopener"><span class="qawach-amz__dot"></span><span><strong>Also available on Amazon</strong><br><small>Shop QAWACH on Amazon.com &rarr;</small></span></a>
+<style>
+.qawach-amz-rating{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:2px 0 8px;color:#111;text-decoration:none;font-size:1.4rem;line-height:1.4}
+.qawach-amz-rating:hover .qawach-amz-rating__link{text-decoration:underline}
+.qawach-amz-rating__link{color:#007185}
+.qawach-amz-stars{position:relative;display:inline-block;color:#d5d9d9;font-size:1.7rem;letter-spacing:1px;line-height:1}
+.qawach-amz-stars__fill{position:absolute;left:0;top:0;overflow:hidden;white-space:nowrap;color:#ffa41c}
+.qawach-amz{display:flex;gap:10px;align-items:center;margin:6px 0 14px;padding:10px 14px;border:1px solid #e3e3e3;border-radius:8px;background:#fafafa;color:#111;text-decoration:none;font-size:1.4rem;line-height:1.35}
+.qawach-amz:hover{border-color:#111}
+.qawach-amz__dot{width:10px;height:10px;border-radius:50%;background:#ff9900;flex:none}
+</style>

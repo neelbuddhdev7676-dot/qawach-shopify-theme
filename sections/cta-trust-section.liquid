@@ -1,0 +1,169 @@
+<div class="why-qawach-wrapper">
+  <div class="features-grid">
+    {% for block in section.blocks %}
+      <div class="feature" {{ block.shopify_attributes }}>
+        {% if block.settings.icon != blank %}
+          <img src="{{ block.settings.icon | image_url: width: 96 }}" alt="{{ block.settings.title | escape }}">
+        {% endif %}
+        <h3>{{ block.settings.title }}</h3>
+        <p>{{ block.settings.description }}</p>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+<style>
+  .why-qawach-wrapper {
+    margin-top: 100px;
+    padding: 4rem 1rem;
+    text-align: center;
+  }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+
+  .feature {
+    padding: 1.5rem;
+    border: 1px solid #eee;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    background-color: #fff;
+    transition: transform 0.3s ease, border-color 0.3s ease;
+    border: 2px solid transparent;
+    max-width: 100%;
+  }
+
+  .feature:hover {
+    transform: translateY(-5px);
+    border-color: #A52A2A;
+  }
+
+  .feature img {
+    height: 48px;
+    margin-bottom: 1rem;
+  }
+
+  .feature h3 {
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+    color: #121212;
+  }
+
+  .feature p {
+    font-size: 1rem;
+    color: #555;
+  }
+
+  @media screen and (max-width: 600px) {
+    .why-qawach-wrapper {
+      padding: 2rem 1rem;
+    }
+
+    .feature h3 {
+      font-size: 1.25rem;
+    }
+
+    .feature p {
+      font-size: 0.95rem;
+    }
+
+    .feature {
+      padding: 1.2rem;
+    }
+
+    .feature img {
+      height: 42px;
+    }
+  }
+
+  @media screen and (max-width: 1024px) {
+     .features-grid {
+        display: grid;
+        /* grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); */
+        gap: 2rem;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 1rem;
+      }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Why Choose QAWACH",
+  "tag": "section",
+  "class": "why-qawach-section",
+  "settings": [],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Feature",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "icon",
+          "label": "Icon"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Feature Title"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description",
+          "default": "Short description of the feature."
+        }
+      ]
+    }
+  ],
+  "max_blocks": 6,
+  "presets": [
+  {
+    "name": "Why Choose QAWACH",
+    "blocks": [
+      {
+        "type": "feature",
+        "settings": {
+          "icon": "shopify:\/\/shop_images\/premium-quality.png",
+          "title": "100% Real Leather",
+          "description": "Crafted with the finest hides for long-lasting comfort, durability, and timeless appeal."
+        }
+      },
+      {
+        "type": "feature",
+        "settings": {
+          "icon": "shopify:\/\/shop_images\/jacket-stitch.png",
+          "title": "Made-to-Measure",
+          "description": "Tailored to your body and preferences — you get the perfect jacket, every time."
+        }
+      },
+      {
+        "type": "feature",
+        "settings": {
+          "icon": "shopify:\/\/shop_images\/secured-payment.png",
+          "title": "Secure Payments",
+          "description": "All transactions are 256-bit encrypted. Your privacy and security are our top priority."
+        }
+      },
+      {
+        "type": "feature",
+        "settings": {
+          "icon": "shopify:\/\/shop_images\/global-shipping.png",
+          "title": "Worldwide Delivery",
+          "description": "Wherever you are, our jackets will find you. Fast, tracked, and reliable shipping."
+        }
+      }
+    ]
+  }]
+
+}
+{% endschema %}
